@@ -1,0 +1,50 @@
+{
+  "name": "@web-eid/web-eid-library",
+  "version": "0.9.0",
+  "description": "",
+  "scripts": {
+    "lint": "eslint . --ext .ts",
+    "build": "npm run clean && npm run compile && npm run bundle",
+    "clean": "rimraf ./dist",
+    "compile": "tsc",
+    "bundle": "rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "npm run build",
+    "prepack": "cp -R ./dist/node/* ./",
+    "postpack": "rimraf ./web-eid.js ./config.js ./errors ./models ./services ./utils ./*.d.ts ./*.map"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.com:web-eid/webextension/web-eid-library.git"
+  },
+  "files": [
+    "config.d.ts",
+    "config.d.ts.map",
+    "config.js",
+    "config.js.map",
+    "web-eid.d.ts",
+    "web-eid.d.ts.map",
+    "web-eid.js",
+    "web-eid.js.map",
+    "errors/**/*",
+    "models/**/*",
+    "services/**/*",
+    "utils/**/*",
+    "dist/es/*",
+    "dist/iife/*",
+    "dist/umd/*"
+  ],
+  "types": "web-eid.d.ts",
+  "author": "Tanel Metsar",
+  "license": "MIT",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.19.2",
+    "@typescript-eslint/parser": "^2.19.2",
+    "eslint": "^6.8.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.26.11",
+    "rollup-plugin-terser": "^5.3.1",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {}
+}

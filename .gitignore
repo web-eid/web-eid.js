@@ -1,0 +1,11 @@
+node_modules
+.vscode
+/web-eid.js
+/config.js
+/errors
+/models
+/services
+/utils
+/*.tgz
+dist/
+*.swp
