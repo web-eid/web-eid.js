@@ -2,14 +2,14 @@
 
 ![European Regional Development Fund](https://github.com/e-gov/RIHA-Frontend/raw/master/logo/EU/EU.png)
 
-`web-eid.js` — add strong authentication and digital signing with electronic ID smart cards to
+`web-eid.js` — add secure authentication and digital signing with electronic ID smart cards to
 web applications with the Web eID JavaScript library. `web-eid.js`
 is a thin wrapper on top of the messaging interface provided by the Web eID
 browser extension.
 
 ## Quickstart
 
-Complete the three steps below to add strong authentication and digital signing
+Complete the three steps below to add secure authentication and digital signing
 support to your web application front end. Instructions for the back end are
 available [here]().
 
@@ -29,7 +29,7 @@ See full example [here]().
 
 See below for alternative installation options.
 
-### 2. Add authentication support to your web app
+### 2. Add authentication support
 
 Copy the following code to the authentication page of your web application,
 amending `options` according to your back end configuration:
@@ -66,7 +66,7 @@ amending `options` according to your back end configuration:
 
 See below for `options` description.
 
-### 3. Add digital signature support to your web app
+### 3. Add digital signing support
 
 Copy the following code to the digital signing page of your web application,
 amending `options` according to your back end configuration:
@@ -102,7 +102,7 @@ amending `options` according to your back end configuration:
 
 See below for `options` description.
 
-### 4. Run the example
+### 4. Test it out
 
 1. Download and run [the Web eID installer](https://web-eid.eu) for your operating system.
 2. Start your web appliction.
