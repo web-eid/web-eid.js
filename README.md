@@ -40,7 +40,7 @@ amending `options` according to your back end configuration:
 </p>
 
 <script type="module">
-    import webeid from 'web-eid.js';
+    import * as webeid from 'web-eid.js';
 
     const authButton = document.querySelector("#webeid-auth-button");
 
@@ -77,7 +77,7 @@ amending `options` according to your back end configuration:
 </p>
 
 <script type="module">
-    import webeid from 'web-eid.js';
+    import * as webeid from 'web-eid.js';
 
     const signButton = document.querySelector("#webeid-sign-button");
 
@@ -187,7 +187,7 @@ TypeScript compiler:
 
 ```javascript
 // Import the Web-eID library
-import webeid from 'web-eid';
+import * as webeid from 'web-eid.js';
 
 // ...or only what you need
 import {
@@ -210,7 +210,7 @@ import AuthenticateOptions from 'web-eid/models/AuthenticateOptions';
 
 ```javascript
 // Import the Web-eID library
-import webeid from 'web-eid.js';
+import * as webeid from 'web-eid.js';
 ```
 
 ### UMD module for AMD and browser-side CommonJS module loaders
