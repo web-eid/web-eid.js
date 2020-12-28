@@ -11,19 +11,19 @@ browser extension.
 
 Complete the three steps below to add secure authentication and digital signing
 support to your web application front end. Instructions for the back end are
-available [here]().
+available [here](https://github.com/web-eid/web-eid-authtoken-validation-java).
 
 To run this quickstart you need a modern web application that uses NPM to
 manage JavaScript packages.
 
-See full example [here]().
+See full example [here](https://github.com/web-eid/web-eid-spring-boot-example).
 
 ### 1. Add web-eid.js to the project
 
 1. Run the following command to install the library using NPM:
 
        echo '@web-eid:registry=https://gitlab.com/api/v4/packages/npm' >> .npmrc
-       npm install web-eid
+       npm install @web-eid/web-eid-library
 
 1. Configure the web server to expose `node_modules/web-eid/dist/es/web-eid.js`
 
@@ -104,10 +104,11 @@ See below for `options` description.
 
 ### 4. Test it out
 
-1. Download and run [the Web eID installer](https://web-eid.eu) for your operating system.
-2. Start your web appliction.
-3. Web eID requires HTTPS. If your web application does not have HTTPS support, use e.g. [ngrok](https://ngrok.com/) to add it.
-4. Open the HTTPS URL in the browser, attach a smart card reader, insert the electronic ID card and try out authentication and signing.
+1. Install Web eID by downloading and running [the Web eID installer](https://web-eid.eu) for your operating system.
+2. Make sure that the Web eID browser extension is enabled.
+3. Start your web appliction.
+4. Web eID requires HTTPS. If your web application does not have HTTPS support, use e.g. [ngrok](https://ngrok.com/) to add it.
+5. Open the HTTPS URL in the browser, attach a smart card reader, insert the electronic ID card and try out authentication and signing.
 
 ## Table of contents
 
@@ -180,7 +181,7 @@ TypeScript compiler:
 1. Run the following command to install the library using NPM:
 
        echo '@web-eid:registry=https://gitlab.com/api/v4/packages/npm' >> .npmrc
-       npm install web-eid
+       npm install @web-eid/web-eid-library
 
 2. Import modules without an extension:
 
