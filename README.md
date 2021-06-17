@@ -21,11 +21,12 @@ See full example [here](https://github.com/web-eid/web-eid-spring-boot-example).
 ### 1. Add web-eid.js to the project
 
 1. Run the following command to install the library using NPM:
+    ```bash
+    echo '@web-eid:registry=https://gitlab.com/api/v4/packages/npm' >> .npmrc
+    npm install @web-eid/web-eid-library
+    ```
 
-       echo '@web-eid:registry=https://gitlab.com/api/v4/packages/npm' >> .npmrc
-       npm install @web-eid/web-eid-library
-
-1. Configure the web server to expose `node_modules/web-eid/dist/es/web-eid.js`
+2. Configure the web server to expose `node_modules/web-eid/dist/es/web-eid.js`
 
 See below for alternative installation options.
 
@@ -355,6 +356,7 @@ Requests the Web-eID browser extension to authenticate the user.
 | `options.headers`                | `object` | `{ }`    | **Optional** HTTP request headers                     |
 | `options.userInteractionTimeout` | `number` | `120000` | **Optional** user interaction timeout in milliseconds |
 | `options.serverRequestTimeout`   | `number` | `20000`  | **Optional** server request timeout in milliseconds   |
+| `options.lang`                   | `string` |          | **Optional** ISO 639-1 two-letter language code       |
 
 **`AuthenticateOptions.getAuthChallengeUrl`**
 This URL should respond to a GET request with a cryptographic nonce.  
@@ -377,6 +379,11 @@ When this request succeeds or fails, the response, including the optional payloa
 **`AuthenticateOptions.headers`**  
 This optional field may contain additional HTTP headers which the browser extension will use while making the **auth challenge** and **auth token** requests.  
 For example, this option can be used to specify authorization headers.
+
+**`AuthenticateOptions.lang`**  
+An optional ISO 639-1 two-letter language code to specify the Web-eID native application's user interface language.  
+When the website allows users to specify their preferred website language,
+this option may be used to display the Web-eID native application's dialogs in the same language as the user preferred website's language.
 
 #### Authenticate returns
 
@@ -546,6 +553,7 @@ Requests the Web-eID browser extension to sign a document hash.
 | `options.headers`                | `object` | `{ }`    | **Optional** HTTP request headers                     |
 | `options.userInteractionTimeout` | `number` | `120000` | **Optional** user interaction timeout in milliseconds |
 | `options.serverRequestTimeout`   | `number` | `20000`  | **Optional** server request timeout in milliseconds   |
+| `options.lang`                   | `string` |          | **Optional** ISO 639-1 two-letter language code       |
 
 **`SignOptions.postPrepareSigningUrl`**
 During the signing process, a POST request will be made by the browser extension against the backend service using this URL to initiate preparations for document signing.
@@ -629,6 +637,10 @@ When this request succeeds or fails, the response, including the optional payloa
 This optional field may contain additional HTTP headers which the browser extension will use while making the **prepare** and **finalize** requests.  
 For example, this option can be used to specify authorization headers.
 
+**`SignOptions.lang`**  
+An optional ISO 639-1 two-letter language code to specify the Web-eID native application's user interface language.  
+When the website allows users to specify their preferred website language,
+this option may be used to display the Web-eID native application's dialogs in the same language as the user preferred website's language.
 
 #### Sign returns
 

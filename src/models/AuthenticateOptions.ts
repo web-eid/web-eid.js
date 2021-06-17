@@ -76,4 +76,11 @@ export default interface AuthenticateOptions {
    * When not specified, defaults to 20 seconds.
    */
   serverRequestTimeout?: number;
+
+  /**
+   * A two-letter ISO 639-1 language code.
+   *
+   * If translations exist for the given language, then the user interface will be displayed in this language.
+   */
+  lang?: string;
 }
