@@ -25,6 +25,7 @@ import OriginMismatchError from "../errors/OriginMismatchError";
 import ContextInsecureError from "../errors/ContextInsecureError";
 import ExtensionUnavailableError from "../errors/ExtensionUnavailableError";
 import ActionPendingError from "../errors/ActionPendingError";
+import NativeInvalidArgumentError from "../errors/NativeInvalidArgumentError";
 import NativeFatalError from "../errors/NativeFatalError";
 import NativeUnavailableError from "../errors/NativeUnavailableError";
 import ServerRejectedError from "../errors/ServerRejectedError";
@@ -48,6 +49,7 @@ const errorCodeToErrorClass: {[key: string]: any} = {
   [ErrorCode.ERR_WEBEID_ORIGIN_MISMATCH]:         OriginMismatchError,
   [ErrorCode.ERR_WEBEID_CONTEXT_INSECURE]:        ContextInsecureError,
   [ErrorCode.ERR_WEBEID_EXTENSION_UNAVAILABLE]:   ExtensionUnavailableError,
+  [ErrorCode.ERR_WEBEID_NATIVE_INVALID_ARGUMENT]: NativeInvalidArgumentError,
   [ErrorCode.ERR_WEBEID_NATIVE_FATAL]:            NativeFatalError,
   [ErrorCode.ERR_WEBEID_NATIVE_UNAVAILABLE]:      NativeUnavailableError,
   [ErrorCode.ERR_WEBEID_PROTOCOL_INSECURE]:       ProtocolInsecureError,

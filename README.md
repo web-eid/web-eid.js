@@ -964,6 +964,12 @@ try {
   - **Likely reason:** User closed the certificate selection, pin entry or similar user interaction dialog.
   - **How to resolve:** Respect the user's wishes.
 
+- **`ERR_WEBEID_NATIVE_INVALID_ARGUMENT`**
+  - **Thrown when:** Native application received an invalid argument.
+  - **Likely reason:** The web application backend passed an invalid argument to the native application. For example, the nonce was too short.
+  - **Unlikely reason:** The extension passed an invalid argument to the native application. For example, an invalid command or command argument.
+  - **How to resolve:** Log the incident and make sure that it reaches the backend developers. In case you can verify that the extension is at fault, report an issue in the [extension GitHub issue tracker](https://github.com/web-eid/web-eid-webextension/issues).
+
 - **`ERR_WEBEID_NATIVE_FATAL`**
   - **Thrown when:** Native application terminated with a fatal error.
   - **Likely reason:** The native application was in an unrecoverable state. For example, the card reader might have been malfunctioning.

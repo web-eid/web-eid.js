@@ -20,10 +20,15 @@
  * SOFTWARE.
  */
 
-export default Object.freeze({
-  VERSION:                          "1.0.0",
-  EXTENSION_HANDSHAKE_TIMEOUT:      1000,          // 1 second
-  NATIVE_APP_HANDSHAKE_TIMEOUT:     5 * 1000,      // 5 seconds
-  DEFAULT_USER_INTERACTION_TIMEOUT: 2 * 60 * 1000, // 2 minutes
-  DEFAULT_SERVER_REQUEST_TIMEOUT:   20 * 1000,     // 20 seconds
-});
+import ErrorCode from "./ErrorCode";
+
+export default class NativeInvalidArgumentError extends Error {
+  public code: ErrorCode;
+
+  constructor(message = "native application received an invalid argument") {
+    super(message);
+
+    this.name = this.constructor.name;
+    this.code = ErrorCode.ERR_WEBEID_NATIVE_INVALID_ARGUMENT;
+  }
+}
