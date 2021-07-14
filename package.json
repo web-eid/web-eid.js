@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@gitlab.com:web-eid/webextension/web-eid-library.git"
+    "url": "git@github.com:web-eid/web-eid.js.git"
   },
   "files": [
     "config.d.ts",
