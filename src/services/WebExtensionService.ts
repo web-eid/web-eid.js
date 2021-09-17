@@ -37,6 +37,8 @@ export default class WebExtensionService {
   }
 
   private receive(event: { data: Message }): void {
+    if (!/^web-eid:/.test(event.data?.action)) return;
+
     const message       = event.data;
     const suffix        = message.action?.match(/success$|failure$|ack$/)?.[0];
     const initialAction = this.getInitialAction(message.action);
@@ -124,14 +126,6 @@ export default class WebExtensionService {
     return this.queue.find((pm) => {
       return pm.message.action === action;
     });
-  }
-
-  getSuccessAction(action: string): string {
-    return `${action}-success`;
-  }
-
-  getFailureAction(action: string): string {
-    return `${action}-failure`;
   }
 
   getInitialAction(action: string): string {
