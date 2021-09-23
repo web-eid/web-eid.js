@@ -3,9 +3,11 @@
 ![European Regional Development Fund](https://github.com/open-eid/DigiDoc4-Client/blob/master/client/images/EL_Regionaalarengu_Fond.png)
 
 `web-eid.js` — add secure authentication and digital signing with electronic ID smart cards to
-web applications with the Web eID JavaScript library. `web-eid.js`
-is a thin wrapper on top of the messaging interface provided by the Web eID
-browser extension.
+web applications with the Web eID JavaScript library.
+`web-eid.js` is a thin wrapper on top of the messaging interface provided by the
+[Web eID browser extension](https://github.com/web-eid/web-eid-webextension).
+
+More information about the Web eID project is available on the project [website](https://web-eid.eu/).
 
 ## Quickstart
 
