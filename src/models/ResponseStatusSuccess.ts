@@ -25,4 +25,5 @@ import Message from "./Message";
 export default interface ResponseStatusSuccess extends Message {
   extension: string;
   nativeApp: string;
+  warnings?: Array<string>;
 }

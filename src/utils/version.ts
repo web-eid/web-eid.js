@@ -27,21 +27,30 @@ import UpdateRequired from "../models/RequiresUpdate";
 /**
  * Checks if update is required.
  *
- * @param version Object containing SemVer version strings for library, extension and native app.
+ * @param status Object containing SemVer version strings for library, extension and native app.
  *
  * @returns Object which specifies if the extension or native app should be updated.
  */
-export function checkCompatibility(version: Versions): UpdateRequired {
-  const library   = parseSemver(version.library);
-  const extension = parseSemver(version.extension);
-  const nativeApp = parseSemver(version.nativeApp);
-
-  const extensionDiff = compareSemver(extension, library);
-  const nativeAppDiff = compareSemver(nativeApp, library);
+export function checkCompatibility(versions: Versions): UpdateRequired {
+  const [
+    librarySemver,
+    extensionSemver,
+    nativeAppSemver,
+  ] = [
+    parseSemver(versions.library),
+    parseSemver(versions.extension),
+    parseSemver(versions.nativeApp),
+  ];
 
   return {
-    extension: extensionDiff.major === IdentifierDiff.OLDER,
-    nativeApp: nativeAppDiff.major === IdentifierDiff.OLDER,
+    extension: (
+      compareSemver(extensionSemver, librarySemver).major === IdentifierDiff.OLDER
+    ),
+
+    nativeApp: (
+      compareSemver(nativeAppSemver, librarySemver).major   === IdentifierDiff.OLDER ||
+      compareSemver(nativeAppSemver, extensionSemver).major === IdentifierDiff.OLDER
+    ),
   };
 }
 
@@ -53,7 +62,7 @@ export function checkCompatibility(version: Versions): UpdateRequired {
  *
  * @returns Were any of the version properties found in the provided object.
  */
-export function hasVersionProperties(object: any): boolean {
+export function hasVersionProperties(object: unknown): boolean {
   if (typeof object === "object") {
     for (const prop of ["library", "extension", "nativeApp"]) {
       if (Object.hasOwnProperty.call(object, prop)) return true;

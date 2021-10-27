@@ -303,6 +303,7 @@ The result of a status check is the status object which contains SemVer strings 
 }
 ```
 
+
 #### Status example - failure
 
 When the status check fails, in addition to the usual `name`, `message` and `stack` properties, the error object contains additional info **when possible**.  

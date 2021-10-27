@@ -25,8 +25,8 @@ import Message from "./Message";
 export default interface PendingMessage {
   message:     Message;
   promise?:    Promise<Message>;
-  resolve?:    Function;
-  reject?:     Function;
+  resolve?:    (value: Message | PromiseLike<Message>) => void;
+  reject?:     (reason?: any) => void
   ackTimer?:   number;
   replyTimer?: number;
 }

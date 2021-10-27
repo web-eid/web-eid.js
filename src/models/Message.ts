@@ -21,7 +21,8 @@
  */
 
 export default interface Message {
-  action: string;
+  action:         string;
+  libraryVersion: string;
 
   [key: string]: any;
 }

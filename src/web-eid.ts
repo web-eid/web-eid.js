@@ -51,25 +51,31 @@ export async function status(): Promise<Versions> {
   const library = config.VERSION;
 
   const timeout = config.EXTENSION_HANDSHAKE_TIMEOUT + config.NATIVE_APP_HANDSHAKE_TIMEOUT;
-  const message = { action: Action.STATUS };
+  const message = {
+    action:         Action.STATUS,
+    libraryVersion: config.VERSION,
+  };
 
   try {
     statusResponse = await webExtensionService.send<ResponseStatusSuccess>(message, timeout);
-  } catch (error) {
+  } catch (error: any) {
     error.library = library;
 
     throw error;
   }
 
-  const versions: Versions = { library, ...statusResponse };
+  const status: Versions = {
+    library,
+    ...statusResponse,
+  };
 
-  const requiresUpdate = version.checkCompatibility(versions);
+  const requiresUpdate = version.checkCompatibility(status);
 
   if (requiresUpdate.extension || requiresUpdate.nativeApp) {
-    throw new VersionMismatchError(undefined, versions, requiresUpdate);
+    throw new VersionMismatchError(undefined, status, requiresUpdate);
   }
 
-  return versions;
+  return status;
 }
 
 export async function authenticate(options: AuthenticateOptions): Promise<HttpResponse> {
@@ -94,7 +100,12 @@ export async function authenticate(options: AuthenticateOptions): Promise<HttpRe
     (options.userInteractionTimeout || config.DEFAULT_USER_INTERACTION_TIMEOUT)
   );
 
-  const message = { ...options, action: Action.AUTHENTICATE };
+  const message = {
+    ...options,
+
+    action:         Action.AUTHENTICATE,
+    libraryVersion: config.VERSION,
+  };
 
   const result = await webExtensionService.send<ResponseAuthenticateSuccess>(message, timeout);
 
@@ -123,7 +134,12 @@ export async function sign(options: SignOptions): Promise<HttpResponse> {
     (options.userInteractionTimeout || config.DEFAULT_USER_INTERACTION_TIMEOUT) * 2
   );
 
-  const message = { ...options, action: Action.SIGN };
+  const message = {
+    ...options,
+
+    action:         Action.SIGN,
+    libraryVersion: config.VERSION,
+  };
 
   const result = await webExtensionService.send<ResponseSignSuccess>(message, timeout);
 

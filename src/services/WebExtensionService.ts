@@ -30,7 +30,8 @@ import ContextInsecureError from "../errors/ContextInsecureError";
 import ExtensionUnavailableError from "../errors/ExtensionUnavailableError";
 
 export default class WebExtensionService {
-  private queue: PendingMessage[] = [];
+  private loggedWarnings: Array<string> = [];
+  private queue: Array<PendingMessage> = [];
 
   constructor() {
     window.addEventListener("message", (event) => this.receive(event));
@@ -44,13 +45,14 @@ export default class WebExtensionService {
     const initialAction = this.getInitialAction(message.action);
     const pending       = this.getPendingMessage(initialAction);
 
-    if (suffix === "ack") {
-      console.log("ack message", message);
-      console.log("ack pending", pending?.message.action);
-      console.log("ack queue", JSON.stringify(this.queue));
-    }
-
-    if (pending) {
+    if (message.action === "web-eid:warning") {
+      message.warnings?.forEach((warning: string) => {
+        if (!this.loggedWarnings.includes(warning)) {
+          this.loggedWarnings.push(warning);
+          console.warn(warning);
+        }
+      });
+    } else if (pending) {
       switch (suffix) {
         case "ack": {
           clearTimeout(pending.ackTimer);
@@ -59,15 +61,15 @@ export default class WebExtensionService {
         }
 
         case "success": {
-          pending.resolve?.(message);
           this.removeFromQueue(initialAction);
+          pending.resolve?.(message);
 
           break;
         }
 
         case "failure": {
-          pending.reject?.(message.error ? deserializeError(message.error) : message);
           this.removeFromQueue(initialAction);
+          pending.reject?.(message.error ? deserializeError(message.error) : message);
 
           break;
         }
@@ -87,17 +89,17 @@ export default class WebExtensionService {
 
       this.queue.push(pending);
 
-      pending.promise = new Promise((resolve, reject) => {
+      pending.promise = new Promise<Message>((resolve, reject) => {
         pending.resolve = resolve;
         pending.reject  = reject;
       });
 
-      pending.ackTimer = setTimeout(
+      pending.ackTimer = window.setTimeout(
         () => this.onAckTimeout(pending),
         config.EXTENSION_HANDSHAKE_TIMEOUT,
       );
 
-      pending.replyTimer = setTimeout(
+      pending.replyTimer = window.setTimeout(
         () => this.onReplyTimeout(pending),
         timeout,
       );
@@ -110,16 +112,15 @@ export default class WebExtensionService {
 
   onReplyTimeout(pending: PendingMessage): void {
     console.log("onReplyTimeout", pending.message.action);
-    pending.reject?.(new ActionTimeoutError());
-
     this.removeFromQueue(pending.message.action);
+    pending.reject?.(new ActionTimeoutError());
   }
 
   onAckTimeout(pending: PendingMessage): void {
     console.log("onAckTimeout", pending.message.action);
-    pending.reject?.(new ExtensionUnavailableError());
-
     clearTimeout(pending.replyTimer);
+    this.removeFromQueue(pending.message.action);
+    pending.reject?.(new ExtensionUnavailableError());
   }
 
   getPendingMessage(action: string): PendingMessage | undefined {
