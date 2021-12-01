@@ -21,8 +21,8 @@
  */
 
 import ErrorCode from "./ErrorCode";
-import Versions from "../models/Versions";
 import RequiresUpdate from "../models/RequiresUpdate";
+import Versions from "../models/Versions";
 
 function tmpl(strings: TemplateStringsArray, requiresUpdate: string): string {
   return `Update required for Web-eID ${requiresUpdate}`;
