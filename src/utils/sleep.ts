@@ -20,9 +20,15 @@
  * SOFTWARE.
  */
 
-import Message from "./Message";
-import HttpResponse from "./HttpResponse";
-
-export default interface ResponseAuthenticateSuccess extends Message {
-  response: HttpResponse;
+/**
+ * Sleeps for a specified time before resolving the returned promise.
+ *
+ * @param milliseconds Time in milliseconds until the promise is resolved
+ *
+ * @returns Empty promise
+ */
+export default function sleep(milliseconds: number): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(), milliseconds);
+  });
 }
