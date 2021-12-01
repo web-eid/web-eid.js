@@ -20,15 +20,27 @@
  * SOFTWARE.
  */
 
-import ErrorCode from "./ErrorCode";
+export type SignatureHashFunction
+  = "SHA-224"
+  | "SHA-256"
+  | "SHA-384"
+  | "SHA-512"
+  | "SHA3-224"
+  | "SHA3-256"
+  | "SHA3-384"
+  | "SHA3-512";
 
-export default class TlsConnectionBrokenError extends Error {
-  public code: ErrorCode;
+export type SignatureCryptoAlgorithm
+  = "ECC"
+  | "RSA";
 
-  constructor(message = "TLS connection was broken") {
-    super(message);
+export type SignaturePaddingScheme
+  = "NONE"
+  | "PKCS1.5"
+  | "PSS";
 
-    this.name = this.constructor.name;
-    this.code = ErrorCode.ERR_WEBEID_TLS_CONNECTION_BROKEN;
-  }
+export interface SignatureAlgorithm {
+  hashFunction: SignatureHashFunction;
+  paddingScheme: SignaturePaddingScheme;
+  cryptoAlgorithm: SignatureCryptoAlgorithm;
 }

@@ -20,14 +20,20 @@
  * SOFTWARE.
  */
 
-import { deserializeError } from "../utils/errorSerializer";
-import config from "../config";
-import Message from "../models/Message";
-import PendingMessage from "../models/PendingMessage";
+import {
+  ExtensionFailureResponse,
+  ExtensionResponse,
+} from "../models/message/ExtensionResponse";
+
+import Action from "../models/Action";
 import ActionPendingError from "../errors/ActionPendingError";
 import ActionTimeoutError from "../errors/ActionTimeoutError";
 import ContextInsecureError from "../errors/ContextInsecureError";
+import { ExtensionRequest } from "../models/message/ExtensionRequest";
 import ExtensionUnavailableError from "../errors/ExtensionUnavailableError";
+import PendingMessage from "../models/PendingMessage";
+import config from "../config";
+import { deserializeError } from "../utils/errorSerializer";
 
 export default class WebExtensionService {
   private loggedWarnings: Array<string> = [];
@@ -37,7 +43,7 @@ export default class WebExtensionService {
     window.addEventListener("message", (event) => this.receive(event));
   }
 
-  private receive(event: { data: Message }): void {
+  private receive(event: { data: ExtensionResponse }): void {
     if (!/^web-eid:/.test(event.data?.action)) return;
 
     const message       = event.data;
@@ -45,7 +51,7 @@ export default class WebExtensionService {
     const initialAction = this.getInitialAction(message.action);
     const pending       = this.getPendingMessage(initialAction);
 
-    if (message.action === "web-eid:warning") {
+    if (message.action === Action.WARNING) {
       message.warnings?.forEach((warning: string) => {
         if (!this.loggedWarnings.includes(warning)) {
           this.loggedWarnings.push(warning);
@@ -68,8 +74,10 @@ export default class WebExtensionService {
         }
 
         case "failure": {
+          const failureMessage = message as ExtensionFailureResponse;
+
           this.removeFromQueue(initialAction);
-          pending.reject?.(message.error ? deserializeError(message.error) : message);
+          pending.reject?.(failureMessage.error ? deserializeError(failureMessage.error) : failureMessage);
 
           break;
         }
@@ -77,7 +85,7 @@ export default class WebExtensionService {
     }
   }
 
-  send<T extends Message>(message: Message, timeout: number): Promise<T> {
+  send<T extends ExtensionResponse>(message: ExtensionRequest, timeout: number): Promise<T> {
     if (this.getPendingMessage(message.action)) {
       return Promise.reject(new ActionPendingError());
 
@@ -89,7 +97,7 @@ export default class WebExtensionService {
 
       this.queue.push(pending);
 
-      pending.promise = new Promise<Message>((resolve, reject) => {
+      pending.promise = new Promise<ExtensionResponse>((resolve, reject) => {
         pending.resolve = resolve;
         pending.reject  = reject;
       });
@@ -111,13 +119,11 @@ export default class WebExtensionService {
   }
 
   onReplyTimeout(pending: PendingMessage): void {
-    console.log("onReplyTimeout", pending.message.action);
     this.removeFromQueue(pending.message.action);
     pending.reject?.(new ActionTimeoutError());
   }
 
   onAckTimeout(pending: PendingMessage): void {
-    console.log("onAckTimeout", pending.message.action);
     clearTimeout(pending.replyTimer);
     this.removeFromQueue(pending.message.action);
     pending.reject?.(new ExtensionUnavailableError());

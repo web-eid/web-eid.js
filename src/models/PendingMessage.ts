@@ -20,12 +20,13 @@
  * SOFTWARE.
  */
 
-import Message from "./Message";
+import { ExtensionRequest } from "./message/ExtensionRequest";
+import { ExtensionResponse } from "./message/ExtensionResponse";
 
 export default interface PendingMessage {
-  message:     Message;
-  promise?:    Promise<Message>;
-  resolve?:    (value: Message | PromiseLike<Message>) => void;
+  message:     ExtensionRequest;
+  promise?:    Promise<ExtensionResponse>;
+  resolve?:    (value: ExtensionResponse | PromiseLike<ExtensionResponse>) => void;
   reject?:     (reason?: any) => void
   ackTimer?:   number;
   replyTimer?: number;

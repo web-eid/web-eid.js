@@ -20,51 +20,71 @@
  * SOFTWARE.
  */
 
-import config from "./config";
+import * as version from "./utils/version";
 
-import ErrorCode from "./errors/ErrorCode";
+import {
+  ExtensionAuthenticateRequest,
+  ExtensionGetSigningCertificateRequest,
+  ExtensionSignRequest,
+  ExtensionStatusRequest,
+} from "./models/message/ExtensionRequest";
+import {
+  ExtensionAuthenticateResponse,
+  ExtensionGetSigningCertificateResponse,
+  ExtensionSignResponse,
+  ExtensionStatusResponse,
+} from "./models/message/ExtensionResponse";
+import {
+  LibraryAuthenticateResponse,
+  LibraryGetSigningCertificateResponse,
+  LibrarySignResponse,
+  LibraryStatusResponse,
+} from "./models/message/LibraryResponse";
 
 import Action from "./models/Action";
-import AuthenticateOptions from "./models/AuthenticateOptions";
-import SignOptions from "./models/SignOptions";
-import Versions from "./models/Versions";
-import ResponseAuthenticateSuccess from "./models/ResponseAuthenticateSuccess";
-import ResponseStatusSuccess from "./models/ResponseStatusSuccess";
-
-import WebExtensionService from "./services/WebExtensionService";
-
-import * as version from "./utils/version";
-import VersionMismatchError from "./errors/VersionMismatchError";
-import HttpResponse from "./models/HttpResponse";
+import ActionOptions from "./models/ActionOptions";
+import ErrorCode from "./errors/ErrorCode";
 import MissingParameterError from "./errors/MissingParameterError";
-import defer from "./utils/defer";
-import ResponseSignSuccess from "./models/ResponseSignSuccess";
+import VersionMismatchError from "./errors/VersionMismatchError";
+import WebExtensionService from "./services/WebExtensionService";
+import config from "./config";
+import sleep from "./utils/sleep";
+
 
 
 const webExtensionService = new WebExtensionService();
+const initializationTime  = +new Date();
 
-export async function status(): Promise<Versions> {
-  await defer(); // Give chrome a moment to load the extension content script
+/**
+ * Give browsers a moment to load the content script
+ */
+async function extensionLoadDelay(): Promise<void> {
+  const now = +new Date();
+  await sleep(initializationTime + config.MAX_EXTENSION_LOAD_DELAY - now);
+}
 
-  let statusResponse;
+export async function status(): Promise<LibraryStatusResponse> {
+  await extensionLoadDelay();
+
+  let statusResponse: ExtensionStatusResponse;
 
   const library = config.VERSION;
-
   const timeout = config.EXTENSION_HANDSHAKE_TIMEOUT + config.NATIVE_APP_HANDSHAKE_TIMEOUT;
-  const message = {
+
+  const message: ExtensionStatusRequest = {
     action:         Action.STATUS,
     libraryVersion: config.VERSION,
   };
 
   try {
-    statusResponse = await webExtensionService.send<ResponseStatusSuccess>(message, timeout);
+    statusResponse = await webExtensionService.send(message, timeout);
   } catch (error: any) {
     error.library = library;
 
     throw error;
   }
 
-  const status: Versions = {
+  const status: LibraryStatusResponse = {
     library,
     ...statusResponse,
   };
@@ -78,72 +98,119 @@ export async function status(): Promise<Versions> {
   return status;
 }
 
-export async function authenticate(options: AuthenticateOptions): Promise<HttpResponse> {
-  await defer(); // Give chrome a moment to load the extension content script
+export async function authenticate(
+  challengeNonce: string,
+  options?: ActionOptions
+): Promise<LibraryAuthenticateResponse> {
+  await extensionLoadDelay();
 
-  if (typeof options != "object") {
-    throw new MissingParameterError("authenticate function requires an options object as parameter");
-  }
-
-  if (!options.getAuthChallengeUrl) {
-    throw new MissingParameterError("getAuthChallengeUrl missing from authenticate options");
-  }
-
-  if (!options.postAuthTokenUrl) {
-    throw new MissingParameterError("postAuthTokenUrl missing from authenticate options");
+  if (!challengeNonce) {
+    throw new MissingParameterError("authenticate function requires a challengeNonce");
   }
 
   const timeout = (
     config.EXTENSION_HANDSHAKE_TIMEOUT +
     config.NATIVE_APP_HANDSHAKE_TIMEOUT +
-    (options.serverRequestTimeout || config.DEFAULT_SERVER_REQUEST_TIMEOUT) * 2 +
-    (options.userInteractionTimeout || config.DEFAULT_USER_INTERACTION_TIMEOUT)
+    (options?.userInteractionTimeout || config.DEFAULT_USER_INTERACTION_TIMEOUT)
   );
 
-  const message = {
-    ...options,
-
+  const message: ExtensionAuthenticateRequest = {
     action:         Action.AUTHENTICATE,
     libraryVersion: config.VERSION,
+
+    challengeNonce,
+    options,
   };
 
-  const result = await webExtensionService.send<ResponseAuthenticateSuccess>(message, timeout);
+  const {
+    unverifiedCertificate,
+    algorithm,
+    signature,
+    format,
+    appVersion,
+  } = await webExtensionService.send<ExtensionAuthenticateResponse>(message, timeout);
 
-  return result.response;
+  return {
+    unverifiedCertificate,
+    algorithm,
+    signature,
+    format,
+    appVersion,
+  };
 }
 
-export async function sign(options: SignOptions): Promise<HttpResponse> {
-  await defer(); // Give chrome a moment to load the extension content script
+export async function getSigningCertificate(options?: ActionOptions): Promise<LibraryGetSigningCertificateResponse> {
+  await extensionLoadDelay();
 
-  if (typeof options != "object") {
-    throw new MissingParameterError("sign function requires an options object as parameter");
+  const timeout = (
+    config.EXTENSION_HANDSHAKE_TIMEOUT +
+    config.NATIVE_APP_HANDSHAKE_TIMEOUT +
+    (options?.userInteractionTimeout || config.DEFAULT_USER_INTERACTION_TIMEOUT) * 2
+  );
+
+  const message: ExtensionGetSigningCertificateRequest = {
+    action:         Action.GET_SIGNING_CERTIFICATE,
+    libraryVersion: config.VERSION,
+
+    options,
+  };
+
+  const {
+    certificate,
+    supportedSignatureAlgorithms,
+  } = await webExtensionService.send<ExtensionGetSigningCertificateResponse>(message, timeout);
+
+  return {
+    certificate,
+    supportedSignatureAlgorithms,
+  };
+}
+
+export async function sign(
+  certificate: string,
+  hash: string,
+  hashFunction: string,
+  options?: ActionOptions,
+): Promise<LibrarySignResponse> {
+  await extensionLoadDelay();
+
+  if (!certificate) {
+    throw new MissingParameterError("sign function requires a certificate as parameter");
   }
 
-  if (!options.postPrepareSigningUrl) {
-    throw new MissingParameterError("postPrepareSigningUrl missing from sign options");
+  if (!hash) {
+    throw new MissingParameterError("sign function requires a hash as parameter");
   }
 
-  if (!options.postFinalizeSigningUrl) {
-    throw new MissingParameterError("postFinalizeSigningUrl missing from sign options");
+  if (!hashFunction) {
+    throw new MissingParameterError("sign function requires a hashFunction as parameter");
   }
 
   const timeout = (
     config.EXTENSION_HANDSHAKE_TIMEOUT +
     config.NATIVE_APP_HANDSHAKE_TIMEOUT +
-    (options.serverRequestTimeout || config.DEFAULT_SERVER_REQUEST_TIMEOUT) * 2 +
-    (options.userInteractionTimeout || config.DEFAULT_USER_INTERACTION_TIMEOUT) * 2
+    (options?.userInteractionTimeout || config.DEFAULT_USER_INTERACTION_TIMEOUT) * 2
   );
 
-  const message = {
-    ...options,
-
+  const message: ExtensionSignRequest = {
     action:         Action.SIGN,
     libraryVersion: config.VERSION,
+
+    certificate,
+    hash,
+    hashFunction,
+    options,
   };
 
-  const result = await webExtensionService.send<ResponseSignSuccess>(message, timeout);
+  const {
+    signature,
+    signatureAlgorithm,
+  } = await webExtensionService.send<ExtensionSignResponse>(message, timeout);
 
-  return result.response;
+  return {
+    signature,
+    signatureAlgorithm,
+  };
 }
 
 export { Action, ErrorCode };

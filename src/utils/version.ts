@@ -20,9 +20,14 @@
  * SOFTWARE.
  */
 
-import Versions from "../models/Versions";
-import { parseSemver, compareSemver, IdentifierDiff } from "./semver";
+import {
+  IdentifierDiff,
+  compareSemver,
+  parseSemver,
+} from "./semver";
+
 import UpdateRequired from "../models/RequiresUpdate";
+import Versions from "../models/Versions";
 
 /**
  * Checks if update is required.
