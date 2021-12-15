@@ -197,7 +197,6 @@ import {
   authenticate,
   Action,
   ErrorCode,
-  hasVersionProperties
 } from 'web-eid';
 
 

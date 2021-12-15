@@ -44,6 +44,13 @@ export interface ExtensionStatusResponse {
    *
    * @see https://semver.org/
    */
+  library: string;
+
+  /**
+   * A version number string in SemVer format
+   *
+   * @see https://semver.org/
+   */
   extension: string;
 
   /**

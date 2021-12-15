@@ -20,8 +20,6 @@
  * SOFTWARE.
  */
 
-import * as version from "./utils/version";
-
 import {
   ExtensionAuthenticateRequest,
   ExtensionGetSigningCertificateRequest,
@@ -45,11 +43,9 @@ import Action from "./models/Action";
 import ActionOptions from "./models/ActionOptions";
 import ErrorCode from "./errors/ErrorCode";
 import MissingParameterError from "./errors/MissingParameterError";
-import VersionMismatchError from "./errors/VersionMismatchError";
 import WebExtensionService from "./services/WebExtensionService";
 import config from "./config";
 import sleep from "./utils/sleep";
-
 
 
 const webExtensionService = new WebExtensionService();
@@ -66,9 +62,6 @@ async function extensionLoadDelay(): Promise<void> {
 export async function status(): Promise<LibraryStatusResponse> {
   await extensionLoadDelay();
 
-  let statusResponse: ExtensionStatusResponse;
-
-  const library = config.VERSION;
   const timeout = config.EXTENSION_HANDSHAKE_TIMEOUT + config.NATIVE_APP_HANDSHAKE_TIMEOUT;
 
   const message: ExtensionStatusRequest = {
@@ -77,25 +70,22 @@ export async function status(): Promise<LibraryStatusResponse> {
   };
 
   try {
-    statusResponse = await webExtensionService.send(message, timeout);
+    const {
+      library,
+      extension,
+      nativeApp,
+    } = await webExtensionService.send<ExtensionStatusResponse>(message, timeout);
+
+    return {
+      library,
+      extension,
+      nativeApp,
+    };
   } catch (error: any) {
-    error.library = library;
+    error.library = config.VERSION;
 
     throw error;
   }
-
-  const status: LibraryStatusResponse = {
-    library,
-    ...statusResponse,
-  };
-
-  const requiresUpdate = version.checkCompatibility(status);
-
-  if (requiresUpdate.extension || requiresUpdate.nativeApp) {
-    throw new VersionMismatchError(undefined, status, requiresUpdate);
-  }
-
-  return status;
 }
 
 export async function authenticate(
@@ -214,5 +204,4 @@ export async function sign(
 }
 
 export { Action, ErrorCode };
-export { hasVersionProperties } from "./utils/version";
 export { config };

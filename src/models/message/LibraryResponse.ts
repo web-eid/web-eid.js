@@ -20,95 +20,17 @@
  * SOFTWARE.
  */
 
-import { SignatureAlgorithm } from "../SignatureAlgorithm";
+import {
+  ExtensionAuthenticateResponse,
+  ExtensionGetSigningCertificateResponse,
+  ExtensionSignResponse,
+  ExtensionStatusResponse,
+} from "./ExtensionResponse";
 
-export interface LibraryStatusResponse {
-  /**
-   * A version number string in SemVer format
-   *
-   * @see https://semver.org/
-   */
-  library: string;
-
-  /**
-   * A version number string in SemVer format
-   *
-   * @see https://semver.org/
-   */
-  extension: string;
-
-  /**
-   * A version number string in SemVer format
-   *
-   * @see https://semver.org/
-   */
-  nativeApp: string;
-}
-
-export interface LibraryAuthenticateResponse {
-  /**
-   * The base64-encoded DER-encoded authentication certificate of the eID user
-   *
-   * The public key contained in this certificate should be used to verify the signature.
-   * The certificate cannot be trusted as it is received from client side and the client can submit a malicious certificate.
-   * To establish trust, it must be verified that the certificate is signed by a trusted certificate authority.
-   */
-  unverifiedCertificate: string;
-
-  /**
-   * The algorithm used to produce the authentication signature
-   *
-   * The allowed values are the algorithms specified in JWA RFC8 sections 3.3, 3.4 and 3.5
-   * @see https://www.ietf.org/rfc/rfc7518.html
-   */
-  algorithm:
-  | "ES256" | "ES384" | "ES512"  // ECDSA
-  | "PS256" | "PS384" | "PS512"  // RSASSA-PSS
-  | "RS256" | "RS384" | "RS512"; // RSASSA-PKCS1-v1_5,
-
-  /**
-   * The base64-encoded signature of the token
-   */
-  signature: string;
-
-  /**
-   * The type identifier and version of the token format separated by a colon character
-   *
-   * @example "web-eid:1.0"
-   */
-  format: string;
-
-  /**
-   * The URL identifying the name and version of the application that issued the token
-   *
-   * @example "https://web-eid.eu/web-eid-app/releases/2.0.0+0"
-   */
-  appVersion: string;
-}
-
-export interface LibraryGetSigningCertificateResponse {
-  /**
-   * The Base64-encoded DER-encoded signing certificate of the eID user
-   */
-  certificate: string;
-
-  /**
-   * The supported signature algorithm options
-   */
-  supportedSignatureAlgorithms: Array<SignatureAlgorithm>;
-}
-
-export interface LibrarySignResponse {
-  /**
-   * Signature algorithm
-   */
-  signatureAlgorithm: SignatureAlgorithm;
-
-  /**
-   * The base64-encoded signature
-   */
-  signature: string;
-}
+export type LibraryStatusResponse                = Omit<ExtensionStatusResponse, "action">;
+export type LibraryAuthenticateResponse          = Omit<ExtensionAuthenticateResponse, "action">;
+export type LibraryGetSigningCertificateResponse = Omit<ExtensionGetSigningCertificateResponse, "action">;
+export type LibrarySignResponse                  = Omit<ExtensionSignResponse, "action">;
 
 export type LibraryResponse
   = LibraryStatusResponse
