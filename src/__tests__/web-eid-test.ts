@@ -60,6 +60,7 @@ describe("status", () => {
 
     window.postMessage({
       action:    "web-eid:status-success",
+      library:   process.env.npm_package_version,
       extension: process.env.npm_package_version,
       nativeApp: process.env.npm_package_version,
     }, "*");
