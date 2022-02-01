@@ -320,9 +320,8 @@ When the status check fails, in addition to the usual `name`, `message` and `sta
 status(): Promise<LibraryStatusResponse>
 ```
 
-To verify that the user has a valid extension and native application version, a status check can be performed.
-We recommend checking the status before performing other actions - if status check fails, other actions will most likely fail as well.  
-However the choice is yours and you may perform the status check retroactively when an action (for example [authenticate](#authenticate)) fails.
+To verify that the user has a valid extension and native application version, a status check can be performed.  
+Version check is performed automatically by the extension when the [authenticate](#authenticate), [get-signing-certificate](#get-signing-certificate) or [sign](#sign) actions fail.
 
 #### Status returns
 
