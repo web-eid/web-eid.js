@@ -626,8 +626,8 @@ Requests the Web-eID browser extension to sign a document hash. The certificate 
 | Name           | Type     | Description                                                  |
 | -------------- | -------- | ------------------------------------------------------------ |
 | `certificate`  | `string` | **Required** the base64-encoded signing certificate of the user |
-| `hash`         | `string` | **Required** the base64-encoded hash of the digital signature container to be signed |
-| `hashFunction` | `string` | **Required** the name of function that was used for computing the hash |
+| `hash`         | `string` | **Required** the base64-encoded hash of the data to be signed |
+| `hashFunction` | `string` | **Required** the name of the function that was used for computing the hash |
 | `options`      | `object` | **Optional** action options object, see `ActionOptions` above |
 
 The allowed `hashFunction` values are SHA-224, SHA-256, SHA-384, SHA-512, SHA3-224, SHA3-256, SHA3-384 and SHA3-512.
