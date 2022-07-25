@@ -21,7 +21,7 @@
  */
 
 export default Object.freeze({
-  VERSION:                          "2.0.0",
+  VERSION:                          "2.0.1",
   EXTENSION_HANDSHAKE_TIMEOUT:      1000,          // 1 second
   NATIVE_APP_HANDSHAKE_TIMEOUT:     5 * 1000,      // 5 seconds
   DEFAULT_USER_INTERACTION_TIMEOUT: 2 * 60 * 1000, // 2 minutes
