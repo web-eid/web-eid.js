@@ -34,7 +34,7 @@ See below for alternative installation options.
 
 ### 2. Activate CSRF protection
 
-To use Web eID securely, CSRF protection must be enabled. Enable and configure CSRF protection in your web application and include the CSRF token in the POST requests in the code examples below.
+To use Web eID securely, CSRF protection must be enabled. Enable and configure CSRF protection in your web application and include the CSRF token in the POST requests as in the code examples below.
 
 ### 3. Add authentication support
 
@@ -221,6 +221,8 @@ customizing CSRF token code, the user language setting and `fetch` URLs accordin
 
 
 ## Installation
+
+A stable pre-built version of the library can be downloaded from the [latest release assets](https://github.com/web-eid/web-eid.js/releases).
 
 ### Without a module system
 
