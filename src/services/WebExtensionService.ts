@@ -55,7 +55,7 @@ export default class WebExtensionService {
       message.warnings?.forEach((warning: string) => {
         if (!this.loggedWarnings.includes(warning)) {
           this.loggedWarnings.push(warning);
-          console.warn(warning);
+          console.warn(warning.replace(/\n|\r/g, ""));
         }
       });
     } else if (pending) {
