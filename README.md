@@ -250,7 +250,7 @@ When using a build tool like WebPack, Babel, Rollup or the TypeScript compiler:
 
 ```javascript
 // Import the Web-eID library
-import * as webeid from 'web-eid';
+import * as webeid from '@web-eid/web-eid-library/web-eid';
 
 // ...or only what you need
 import {
@@ -258,11 +258,11 @@ import {
   authenticate,
   Action,
   ErrorCode
-} from 'web-eid';
+} from '@web-eid/web-eid-library/web-eid';
 
 
 // If you need TypeScript interfaces, they are also available!
-import AuthenticateOptions from 'web-eid/models/AuthenticateOptions';
+import ActionOptions from '@web-eid/web-eid-library/models/ActionOptions';
 ```
 
 ### ES module for browsers
