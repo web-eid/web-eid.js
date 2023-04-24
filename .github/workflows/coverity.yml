@@ -1,0 +1,51 @@
+name: "Coverity"
+
+on:
+  push:
+    branches: [ "coverity_scan" ]
+
+jobs:
+
+  coverity:
+    name: Run Coverity tests
+    if: github.repository == 'web-eid/web-eid.js'
+    runs-on: ubuntu-latest
+    env:
+      TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}
+      PROJECTNAME: ${{ github.repository }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '14.x'
+    - name: Cache Node.js modules
+      uses: actions/cache@v3
+      with:
+        # npm cache files are stored in `~/.npm` on Linux/macOS
+        path: ~/.npm
+        key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.OS }}-node-
+          ${{ runner.OS }}-
+    - name: Install dependencies
+      run: npm ci
+    - name: Download Coverity Build Tool
+      run: |
+        curl --silent --data "token=$TOKEN&project=$PROJECTNAME" -o cov-analysis-linux64.tar.gz https://scan.coverity.com/download/cxx/linux64
+        mkdir cov-analysis-linux64
+        tar xzf cov-analysis-linux64.tar.gz --strip 1 -C cov-analysis-linux64
+    - name: Build
+      run: |
+        export PATH=$PWD/cov-analysis-linux64/bin:$PATH
+        cov-build --dir cov-int --no-command --fs-capture-search ./src 
+    - name: Submit the result to Coverity Scan
+      run: |
+        tar czvf upload.tgz cov-int
+        curl --silent \
+          --form project=$PROJECTNAME \
+          --form token=$TOKEN \
+          --form email=eid-teenusehaldus@ria.ee \
+          --form file=@upload.tgz \
+          --form version=master \
+          --form description="Github Actions CI build" \
+          https://scan.coverity.com/builds?project=$PROJECTNAME
