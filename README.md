@@ -63,14 +63,14 @@ Use the following code as an example when implementing authentication. For an in
                 throw new Error("GET /auth/challenge server error: " +
                                 challengeResponse.status);
             }
-            const {challengeNonce} = await challengeResponse.json();
+            const {nonce} = await challengeResponse.json();
             
-            const authToken = await webeid.authenticate(challengeNonce, {lang});
+            const authToken = await webeid.authenticate(nonce, {lang});
             
             const authTokenResponse = await fetch("/auth/login", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                     [csrfHeaderName]: csrfToken
                 },
                 body: JSON.stringify({authToken})
