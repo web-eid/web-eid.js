@@ -1,8 +1,11 @@
 import path from "path";
+import { fileURLToPath } from "url";
 
 import cleanup from "rollup-plugin-cleanup";
 import license from "rollup-plugin-license";
-import { terser } from "rollup-plugin-terser";
+import terser from "@rollup/plugin-terser";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default {
   input: "./dist/node/web-eid.js",
