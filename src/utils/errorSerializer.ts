@@ -34,7 +34,7 @@ import UserTimeoutError from "../errors/UserTimeoutError";
 import VersionInvalidError from "../errors/VersionInvalidError";
 import VersionMismatchError from "../errors/VersionMismatchError";
 
-const errorCodeToErrorClass: {[key: string]: any} = {
+const errorCodeToErrorClass: Record<string, any> = {
   [ErrorCode.ERR_WEBEID_ACTION_PENDING]:          ActionPendingError,
   [ErrorCode.ERR_WEBEID_ACTION_TIMEOUT]:          ActionTimeoutError,
   [ErrorCode.ERR_WEBEID_CONTEXT_INSECURE]:        ContextInsecureError,

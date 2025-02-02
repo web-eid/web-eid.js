@@ -25,7 +25,7 @@ import {
   ExtensionResponse,
 } from "../models/message/ExtensionResponse";
 
-import Action from "../models/Action";
+import Action, { InitialAction } from "../models/Action";
 import ActionPendingError from "../errors/ActionPendingError";
 import ActionTimeoutError from "../errors/ActionTimeoutError";
 import ContextInsecureError from "../errors/ContextInsecureError";
@@ -44,7 +44,7 @@ export default class WebExtensionService {
   }
 
   private receive(event: { data: ExtensionResponse }): void {
-    if (!/^web-eid:/.test(event.data?.action)) return;
+    if (!event.data?.action.startsWith("web-eid:")) return;
 
     const message       = event.data;
     const suffix        = message.action?.match(/success$|failure$|ack$/)?.[0];
@@ -129,17 +129,17 @@ export default class WebExtensionService {
     pending.reject?.(new ExtensionUnavailableError());
   }
 
-  getPendingMessage(action: string): PendingMessage | undefined {
+  getPendingMessage(action: InitialAction): PendingMessage | undefined {
     return this.queue.find((pm) => {
       return pm.message.action === action;
     });
   }
 
-  getInitialAction(action: string): string {
-    return action.replace(/-success$|-failure$|-ack$/, "");
+  getInitialAction(action: string): InitialAction {
+    return action.replace(/-success$|-failure$|-ack$/, "") as InitialAction;
   }
 
-  removeFromQueue(action: string): void {
+  removeFromQueue(action: InitialAction): void {
     const pending = this.getPendingMessage(action);
 
     clearTimeout(pending?.replyTimer);
