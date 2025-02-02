@@ -44,4 +44,10 @@ enum Action {
   SIGN_FAILURE = "web-eid:sign-failure",
 }
 
+export type InitialAction
+  = Action.STATUS
+  | Action.AUTHENTICATE
+  | Action.GET_SIGNING_CERTIFICATE
+  | Action.SIGN;
+
 export default Action;
