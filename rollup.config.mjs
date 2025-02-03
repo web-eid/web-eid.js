@@ -15,7 +15,6 @@ export default {
     license({
       banner: {
         content: {
-          // eslint-disable-next-line no-undef
           file:     path.join(__dirname, "LICENSE"),
           encoding: "utf-8",
         },

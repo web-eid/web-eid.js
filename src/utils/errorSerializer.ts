@@ -20,11 +20,15 @@
  * SOFTWARE.
  */
 
+import { SerializedError } from "../errors/SerializedError";
+
 import ActionPendingError from "../errors/ActionPendingError";
 import ActionTimeoutError from "../errors/ActionTimeoutError";
 import ContextInsecureError from "../errors/ContextInsecureError";
 import ErrorCode from "../errors/ErrorCode";
 import ExtensionUnavailableError from "../errors/ExtensionUnavailableError";
+import KnownErrorConstructors from "../errors/KnownErrorConstructors";
+import MissingParameterError from "../errors/MissingParameterError";
 import NativeFatalError from "../errors/NativeFatalError";
 import NativeInvalidArgumentError from "../errors/NativeInvalidArgumentError";
 import NativeUnavailableError from "../errors/NativeUnavailableError";
@@ -34,11 +38,12 @@ import UserTimeoutError from "../errors/UserTimeoutError";
 import VersionInvalidError from "../errors/VersionInvalidError";
 import VersionMismatchError from "../errors/VersionMismatchError";
 
-const errorCodeToErrorClass: Record<string, any> = {
+const errorCodeToErrorClass: Record<keyof typeof ErrorCode, KnownErrorConstructors> = {
   [ErrorCode.ERR_WEBEID_ACTION_PENDING]:          ActionPendingError,
   [ErrorCode.ERR_WEBEID_ACTION_TIMEOUT]:          ActionTimeoutError,
   [ErrorCode.ERR_WEBEID_CONTEXT_INSECURE]:        ContextInsecureError,
   [ErrorCode.ERR_WEBEID_EXTENSION_UNAVAILABLE]:   ExtensionUnavailableError,
+  [ErrorCode.ERR_WEBEID_MISSING_PARAMETER]:       MissingParameterError,
   [ErrorCode.ERR_WEBEID_NATIVE_INVALID_ARGUMENT]: NativeInvalidArgumentError,
   [ErrorCode.ERR_WEBEID_NATIVE_FATAL]:            NativeFatalError,
   [ErrorCode.ERR_WEBEID_NATIVE_UNAVAILABLE]:      NativeUnavailableError,
@@ -46,39 +51,41 @@ const errorCodeToErrorClass: Record<string, any> = {
   [ErrorCode.ERR_WEBEID_USER_TIMEOUT]:            UserTimeoutError,
   [ErrorCode.ERR_WEBEID_VERSION_INVALID]:         VersionInvalidError,
   [ErrorCode.ERR_WEBEID_VERSION_MISMATCH]:        VersionMismatchError,
+  [ErrorCode.ERR_WEBEID_UNKNOWN_ERROR]:           UnknownError,
 };
 
-export function serializeError(error: any): any {
-  const {
-    message,
-    name,
-    fileName,
-    lineNumber,
-    columnNumber,
-    stack,
-  } = error;
+export function serializeError(error: Error): SerializedError {
+  if (typeof error != "object" || error == null || !(error instanceof Error)) {
+    throw new UnknownError();
+  }
 
-  return {
-    ...(
-      Object.fromEntries(
-        Object.getOwnPropertyNames(error)
-          .map((prop) => [prop, error[prop]])
-      )
-    ),
+  const result: Record<string, unknown> = {};
 
-    message,
-    name,
-    fileName,
-    lineNumber,
-    columnNumber,
-    stack,
-  };
+  for (const prop of Object.getOwnPropertyNames(error)) {
+    Reflect.set(result, prop, Reflect.get(error, prop));
+  }
+
+  return result as SerializedError;
 }
 
-export function deserializeError(errorObject: any): any {
+function isSerializedError(obj: unknown): obj is SerializedError {
+  if (typeof obj !== "object" || obj === null) {
+    return false;
+  }
+
+  const errorObject = obj as SerializedError;
+
+  return (
+    typeof errorObject.name    === "string" &&
+    typeof errorObject.message === "string" &&
+    typeof errorObject.stack   === "string"
+  );
+}
+
+export function deserializeError(errorObject: SerializedError): InstanceType<KnownErrorConstructors> {
   let error;
 
-  if (typeof errorObject.code == "string" && errorObject.code in errorCodeToErrorClass) {
+  if (isSerializedError(errorObject)) {
     const CustomError = errorCodeToErrorClass[errorObject.code];
 
     error = new CustomError();
@@ -86,9 +93,9 @@ export function deserializeError(errorObject: any): any {
     error = new UnknownError();
   }
 
-  for (const [key, value] of Object.entries(errorObject)) {
-    error[key] = value;
-  }
+  Object.entries(errorObject).forEach(([key, value]) => {
+    Reflect.set(error as object, key, value);
+  });
 
   return error;
 }

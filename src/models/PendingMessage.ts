@@ -27,7 +27,7 @@ export default interface PendingMessage {
   message:     ExtensionRequest;
   promise?:    Promise<ExtensionResponse>;
   resolve?:    (value: ExtensionResponse | PromiseLike<ExtensionResponse>) => void;
-  reject?:     (reason?: any) => void
+  reject?:     (reason?: Error) => void
   ackTimer?:   number;
   replyTimer?: number;
 }

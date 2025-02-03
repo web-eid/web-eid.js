@@ -20,8 +20,10 @@
  * SOFTWARE.
  */
 
-import Action from "../Action";
+import { SerializedError } from "../../errors/SerializedError";
 import { SignatureAlgorithm } from "../SignatureAlgorithm";
+
+import Action from "../Action";
 
 export interface ExtensionWarningResponse {
   action: Action.WARNING;
@@ -139,7 +141,7 @@ export interface ExtensionFailureResponse {
   | Action.GET_SIGNING_CERTIFICATE_FAILURE
   | Action.SIGN_FAILURE;
 
-  error: any;
+  error: SerializedError;
 }
 
 export type ExtensionResponse

@@ -47,7 +47,6 @@ import WebExtensionService from "./services/WebExtensionService";
 import config from "./config";
 import sleep from "./utils/sleep";
 
-
 const webExtensionService = new WebExtensionService();
 const initializationTime  = +new Date();
 
@@ -81,8 +80,10 @@ export async function status(): Promise<LibraryStatusResponse> {
       extension,
       nativeApp,
     };
-  } catch (error: any) {
-    error.library = config.VERSION;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      Reflect.set(error, "library", config.VERSION);
+    }
 
     throw error;
   }
@@ -101,7 +102,7 @@ export async function authenticate(
   const timeout = (
     config.EXTENSION_HANDSHAKE_TIMEOUT +
     config.NATIVE_APP_HANDSHAKE_TIMEOUT +
-    (options?.userInteractionTimeout || config.DEFAULT_USER_INTERACTION_TIMEOUT)
+    (options?.userInteractionTimeout ?? config.DEFAULT_USER_INTERACTION_TIMEOUT)
   );
 
   const message: ExtensionAuthenticateRequest = {
@@ -135,7 +136,7 @@ export async function getSigningCertificate(options?: ActionOptions): Promise<Li
   const timeout = (
     config.EXTENSION_HANDSHAKE_TIMEOUT +
     config.NATIVE_APP_HANDSHAKE_TIMEOUT +
-    (options?.userInteractionTimeout || config.DEFAULT_USER_INTERACTION_TIMEOUT) * 2
+    (options?.userInteractionTimeout ?? config.DEFAULT_USER_INTERACTION_TIMEOUT) * 2
   );
 
   const message: ExtensionGetSigningCertificateRequest = {
@@ -179,7 +180,7 @@ export async function sign(
   const timeout = (
     config.EXTENSION_HANDSHAKE_TIMEOUT +
     config.NATIVE_APP_HANDSHAKE_TIMEOUT +
-    (options?.userInteractionTimeout || config.DEFAULT_USER_INTERACTION_TIMEOUT) * 2
+    (options?.userInteractionTimeout ?? config.DEFAULT_USER_INTERACTION_TIMEOUT) * 2
   );
 
   const message: ExtensionSignRequest = {

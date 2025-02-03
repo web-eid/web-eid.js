@@ -35,7 +35,7 @@ export default class VersionMismatchError extends Error {
   public extension?: string;
   public library?: string;
 
-  constructor(message: string | undefined, versions: Versions, requiresUpdate: RequiresUpdate) {
+  constructor(message?: string, versions?: Versions, requiresUpdate?: RequiresUpdate) {
     if (!message) {
       if (!requiresUpdate) {
         message = "requiresUpdate not provided";
@@ -52,7 +52,7 @@ export default class VersionMismatchError extends Error {
 
     this.name           = this.constructor.name;
     this.code           = ErrorCode.ERR_WEBEID_VERSION_MISMATCH;
-    this.requiresUpdate = requiresUpdate;
+    this.requiresUpdate = requiresUpdate ?? { nativeApp: false, extension: false };
 
     if (versions) {
       const { library, extension, nativeApp } = versions;
