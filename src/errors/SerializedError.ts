@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2024 Estonian Information System Authority
+ * Copyright (c) 2025 Estonian Information System Authority
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,11 @@
 
 import ErrorCode from "./ErrorCode";
 
-export default class MissingParameterError extends Error {
-  public code: ErrorCode;
-
-  constructor(message?: string) {
-    super(message);
-
-    this.name = this.constructor.name;
-    this.code = ErrorCode.ERR_WEBEID_MISSING_PARAMETER;
-  }
+export interface SerializedError {
+  message: string;
+  name: string;
+  stack: string;
+  code: ErrorCode;
+  // ...any other fields that might be serialized
+  [key: string]: unknown; // allow extra properties
 }

@@ -47,7 +47,7 @@ export default class WebExtensionService {
     if (!event.data?.action.startsWith("web-eid:")) return;
 
     const message       = event.data;
-    const suffix        = message.action?.match(/success$|failure$|ack$/)?.[0];
+    const suffix        = ["success", "failure", "ack"].find((s) => message.action.endsWith(s));
     const initialAction = this.getInitialAction(message.action);
     const pending       = this.getPendingMessage(initialAction);
 
@@ -77,7 +77,7 @@ export default class WebExtensionService {
           const failureMessage = message as ExtensionFailureResponse;
 
           this.removeFromQueue(initialAction);
-          pending.reject?.(failureMessage.error ? deserializeError(failureMessage.error) : failureMessage);
+          pending.reject?.(deserializeError(failureMessage.error));
 
           break;
         }

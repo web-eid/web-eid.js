@@ -50,25 +50,6 @@ export default tseslint.config(
       "@stylistic/ts/semi": "error",
 
       "@typescript-eslint/array-type": ["error", { default: "generic" }],
-
-      // The following rules override the default "error" setting.
-      // These cases should be investigated and the overrides 
-      // should either be removed or set to "off".
-      "@typescript-eslint/no-explicit-any":              "warn",
-      "@typescript-eslint/no-floating-promises":         "warn",
-      "@typescript-eslint/no-unsafe-argument":           "warn",
-      "@typescript-eslint/no-unsafe-assignment":         "warn",
-      "@typescript-eslint/no-unsafe-member-access":      "warn",
-      "@typescript-eslint/no-unused-expressions":        "warn",
-      "@typescript-eslint/no-unsafe-return":             "warn",
-      "@typescript-eslint/no-unsafe-call":               "warn",
-      "@typescript-eslint/prefer-promise-reject-errors": "warn",
-      "@typescript-eslint/prefer-regexp-exec":           "warn",
-      "@typescript-eslint/prefer-nullish-coalescing":    "warn",
-      "@typescript-eslint/consistent-type-definitions":  "warn",
-      "@typescript-eslint/no-misused-promises":          "warn",
-      "@typescript-eslint/dot-notation":                 "warn",
-      "@typescript-eslint/restrict-plus-operands":       "warn",
     },
   },
 );
