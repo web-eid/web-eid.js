@@ -5,8 +5,6 @@ import cleanup from "rollup-plugin-cleanup";
 import license from "rollup-plugin-license";
 import terser from "@rollup/plugin-terser";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
 export default {
   input: "./dist/node/web-eid.js",
 
@@ -15,7 +13,7 @@ export default {
     license({
       banner: {
         content: {
-          file:     path.join(__dirname, "LICENSE"),
+          file:     path.join(import.meta.dirname, "LICENSE"),
           encoding: "utf-8",
         },
       },
