@@ -39,6 +39,7 @@
   "license": "MIT",
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
+    "@stylistic/eslint-plugin-js": "^3.1.0",
     "@stylistic/eslint-plugin-ts": "^3.0.1",
     "@types/jest": "^29.5.14",
     "eslint": "^9.19.0",
