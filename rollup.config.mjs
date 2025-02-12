@@ -1,5 +1,4 @@
 import path from "path";
-import { fileURLToPath } from "url";
 
 import cleanup from "rollup-plugin-cleanup";
 import license from "rollup-plugin-license";

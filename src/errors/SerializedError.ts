@@ -23,10 +23,10 @@
 import ErrorCode from "./ErrorCode";
 
 export interface SerializedError {
-  message: string;
-  name: string;
-  stack: string;
   code: ErrorCode;
-  // ...any other fields that might be serialized
+  message: string;
+  name?: string;
+  stack?: string;
+
   [key: string]: unknown; // allow extra properties
 }

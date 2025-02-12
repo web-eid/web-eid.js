@@ -55,14 +55,26 @@ const errorCodeToErrorClass: Record<keyof typeof ErrorCode, KnownErrorConstructo
 };
 
 export function serializeError(error: Error): SerializedError {
-  if (typeof error != "object" || error == null || !(error instanceof Error)) {
-    throw new UnknownError();
+  if (!(error instanceof Error)) {
+    error = new UnknownError(typeof error == "string" ? error : undefined);
   }
 
   const result: Record<string, unknown> = {};
 
   for (const prop of Object.getOwnPropertyNames(error)) {
     Reflect.set(result, prop, Reflect.get(error, prop));
+  }
+
+  for (const key of ["name", "stack"]) {
+    const errorAsObject = (error as unknown as Record<string, unknown>);
+    if (!result[key] && errorAsObject?.[key] != null) {
+      Reflect.set(result, key, errorAsObject[key]);
+    }
+  }
+
+  if (!result.code) {
+    result.code = ErrorCode.ERR_WEBEID_UNKNOWN_ERROR;
+    result.name = UnknownError.name;
   }
 
   return result as SerializedError;
@@ -76,26 +88,32 @@ function isSerializedError(obj: unknown): obj is SerializedError {
   const errorObject = obj as SerializedError;
 
   return (
-    typeof errorObject.name    === "string" &&
+    typeof errorObject.code    === "string" &&
     typeof errorObject.message === "string" &&
-    typeof errorObject.stack   === "string"
+
+    errorCodeToErrorClass[errorObject.code] != null
   );
 }
 
 export function deserializeError(errorObject: SerializedError): InstanceType<KnownErrorConstructors> {
-  let error;
+  let error: InstanceType<KnownErrorConstructors>;
 
   if (isSerializedError(errorObject)) {
     const CustomError = errorCodeToErrorClass[errorObject.code];
 
     error = new CustomError();
+
+    Object.entries(errorObject).forEach(([key, value]) => {
+      Reflect.set(error, key, value);
+    });
   } else {
     error = new UnknownError();
-  }
 
-  Object.entries(errorObject).forEach(([key, value]) => {
-    Reflect.set(error as object, key, value);
-  });
+    const unknownObject = (errorObject as { stack?: string, message?: string });
+
+    if (unknownObject?.stack)   error.stack   = unknownObject.stack;
+    if (unknownObject?.message) error.message = unknownObject.message;
+  }
 
   return error;
 }

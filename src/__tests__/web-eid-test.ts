@@ -39,10 +39,10 @@ describe("status", () => {
   it("should include library version with message to extension", async () => {
     jest.spyOn(window, "postMessage").mockImplementation();
 
-    try { await webeid.status(); } catch (e) { /* ignore */ }
+    try { await webeid.status(); } catch { /* ignore */ }
 
-    expect(window.postMessage).toBeCalledTimes(1);
-    expect(window.postMessage).toBeCalledWith(
+    expect(window.postMessage).toHaveBeenCalledTimes(1);
+    expect(window.postMessage).toHaveBeenCalledWith(
       {
         action:         "web-eid:status",
         libraryVersion: process.env.npm_package_version,
@@ -93,10 +93,10 @@ describe("authenticate", () => {
 
     const challengeNonce = "12345678901234567890123456789012345678901234";
 
-    try { await webeid.authenticate(challengeNonce, options); } catch (e) { /* ignore */ }
+    try { await webeid.authenticate(challengeNonce, options); } catch { /* ignore */ }
 
-    expect(window.postMessage).toBeCalledTimes(1);
-    expect(window.postMessage).toBeCalledWith(
+    expect(window.postMessage).toHaveBeenCalledTimes(1);
+    expect(window.postMessage).toHaveBeenCalledWith(
       {
         action: "web-eid:authenticate",
 
@@ -117,10 +117,10 @@ describe("authenticate", () => {
 
     const challengeNonce = "12345678901234567890123456789012345678901234";
 
-    try { await webeid.authenticate(challengeNonce, options); } catch (e) { /* ignore */ }
+    try { await webeid.authenticate(challengeNonce, options); } catch { /* ignore */ }
 
-    expect(window.postMessage).toBeCalledTimes(1);
-    expect(window.postMessage).toBeCalledWith(
+    expect(window.postMessage).toHaveBeenCalledTimes(1);
+    expect(window.postMessage).toHaveBeenCalledWith(
       {
         action: "web-eid:authenticate",
 
@@ -150,10 +150,10 @@ describe("getSigningCertificate", () => {
 
     const options: NativeAppOptions = { userInteractionTimeout: 1 };
 
-    try { await webeid.getSigningCertificate(options); } catch (e) { /* ignore */ }
+    try { await webeid.getSigningCertificate(options); } catch { /* ignore */ }
 
-    expect(window.postMessage).toBeCalledTimes(1);
-    expect(window.postMessage).toBeCalledWith(
+    expect(window.postMessage).toHaveBeenCalledTimes(1);
+    expect(window.postMessage).toHaveBeenCalledWith(
       {
         action: "web-eid:get-signing-certificate",
 
@@ -174,10 +174,10 @@ describe("getSigningCertificate", () => {
     // Including userInteractionTimeout to speed up the test
     const options: NativeAppOptions = { userInteractionTimeout: 1, lang: "en" };
 
-    try { await webeid.getSigningCertificate(options); } catch (e) { /* ignore */ }
+    try { await webeid.getSigningCertificate(options); } catch { /* ignore */ }
 
-    expect(window.postMessage).toBeCalledTimes(1);
-    expect(window.postMessage).toBeCalledWith(
+    expect(window.postMessage).toHaveBeenCalledTimes(1);
+    expect(window.postMessage).toHaveBeenCalledWith(
       {
         action: "web-eid:get-signing-certificate",
 
@@ -214,10 +214,10 @@ describe("sign", () => {
 
     const options: NativeAppOptions = { userInteractionTimeout: 1 };
 
-    try { await webeid.sign(certificate, hash, hashFunction, options); } catch (e) { /* ignore */ }
+    try { await webeid.sign(certificate, hash, hashFunction, options); } catch { /* ignore */ }
 
-    expect(window.postMessage).toBeCalledTimes(1);
-    expect(window.postMessage).toBeCalledWith(
+    expect(window.postMessage).toHaveBeenCalledTimes(1);
+    expect(window.postMessage).toHaveBeenCalledWith(
       {
         action: "web-eid:sign",
 
@@ -245,10 +245,10 @@ describe("sign", () => {
     // Including userInteractionTimeout to speed up the test
     const options: NativeAppOptions = { userInteractionTimeout: 1, lang: "en" };
 
-    try { await webeid.sign(certificate, hash, hashFunction, options); } catch (e) { /* ignore */ }
+    try { await webeid.sign(certificate, hash, hashFunction, options); } catch { /* ignore */ }
 
-    expect(window.postMessage).toBeCalledTimes(1);
-    expect(window.postMessage).toBeCalledWith(
+    expect(window.postMessage).toHaveBeenCalledTimes(1);
+    expect(window.postMessage).toHaveBeenCalledWith(
       {
         action: "web-eid:sign",
 
