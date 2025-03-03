@@ -1,0 +1,18 @@
+<h2 class="adding-signature">Digital signing demo</h2>
+<p class="welcome-line">Welcome, {{ authService.user?.sub }}!</p>
+
+@if (step === 0 || step === 1) {
+  <p>
+    You can sign the example document by clicking <i>Sign document</i> below.
+  </p>
+
+  <div class="text-center">
+    <button id="webeid-sign-button" class="btn btn-primary" (click)="sign()" [disabled]="step === 1">Sign document</button>
+  </div>
+} @else if (step === 2 ) {
+  <div class="alert alert-success" role="alert">Document signed successfully!</div>
+}
+
+@if (alert) {
+  <div class="alert alert-danger mt-4" role="alert">{{ alert }}</div>
+}
