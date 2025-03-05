@@ -1,6 +1,6 @@
 {
   "name": "@web-eid/web-eid-library",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "",
   "scripts": {
     "lint": "eslint",
@@ -18,13 +18,6 @@
     "url": "git@github.com:web-eid/web-eid.js.git"
   },
   "module": "web-eid.js",
-  "exports": {
-    ".": {
-      "browser": "./dist/iife/web-eid.min.js",
-      "import": "./web-eid.js",
-      "default": "./dist/iife/web-eid.min.js"
-    }
-  },
   "files": [
     "config.d.ts",
     "config.d.ts.map",
