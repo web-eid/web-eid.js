@@ -1,0 +1,5 @@
+<button type="submit" class="btn btn-primary" [disabled]="loading" (click)="login()">Login</button>
+
+@if (alert) {
+  <div class="alert alert-danger my-4" role="alert">{{ alert }}</div>
+}
