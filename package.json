@@ -17,8 +17,45 @@
     "type": "git",
     "url": "git@github.com:web-eid/web-eid.js.git"
   },
-  "module": "web-eid.js",
+  "main": "dist/node/web-eid.js",
+  "module": "dist/node/web-eid.js",
+  "types": "dist/node/web-eid.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/node/web-eid.d.ts",
+      "import": "./dist/node/web-eid.js"
+    },
+    "./config": {
+      "types": "./dist/node/config.d.ts",
+      "import": "./dist/node/config.js"
+    },
+    "./errors/*": {
+      "types": "./dist/node/errors/*.d.ts",
+      "import": "./dist/node/errors/*.js"
+    },
+    "./models/*": {
+      "types": "./dist/node/models/*.d.ts",
+      "import": "./dist/node/models/*.js"
+    },
+    "./models/message/*": {
+      "types": "./dist/node/models/message/*.d.ts",
+      "import": "./dist/node/models/message/*.js"
+    },
+    "./services/*": {
+      "types": "./dist/node/services/*.d.ts",
+      "import": "./dist/node/services/*.js"
+    },
+    "./utils/*": {
+      "types": "./dist/node/utils/*.d.ts",
+      "import": "./dist/node/utils/*.js"
+    }
+  },
   "files": [
+    "src/**/*",
+    "dist/node/**/*",
+    "dist/es/*",
+    "dist/iife/*",
+    "dist/umd/*",
     "config.d.ts",
     "config.d.ts.map",
     "config.js",
@@ -30,12 +67,8 @@
     "errors/**/*",
     "models/**/*",
     "services/**/*",
-    "utils/**/*",
-    "dist/es/*",
-    "dist/iife/*",
-    "dist/umd/*"
+    "utils/**/*"
   ],
-  "types": "web-eid.d.ts",
   "author": "Tanel Metsar",
   "license": "MIT",
   "devDependencies": {
