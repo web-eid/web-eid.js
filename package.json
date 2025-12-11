@@ -25,7 +25,8 @@
     ".": {
       "types": "./dist/node/web-eid.d.ts",
       "import": "./dist/node/web-eid.js",
-      "require": "./dist/umd/web-eid.cjs"
+      "require": "./dist/umd/web-eid.cjs",
+      "default": "./dist/umd/web-eid.cjs"
     },
     "./config": {
       "types": "./dist/node/config.d.ts",
