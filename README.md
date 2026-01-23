@@ -250,7 +250,7 @@ When using a build tool like WebPack, Babel, Rollup or the TypeScript compiler:
 
 ```javascript
 // Import the Web-eID library
-import * as webeid from '@web-eid/web-eid-library/web-eid';
+import * as webeid from '@web-eid/web-eid-library';
 
 // ...or only what you need
 import {
@@ -258,7 +258,7 @@ import {
   authenticate,
   Action,
   ErrorCode
-} from '@web-eid/web-eid-library/web-eid';
+} from '@web-eid/web-eid-library';
 
 
 // If you need TypeScript interfaces, they are also available!
@@ -913,12 +913,6 @@ npm link ~/workspace/web-eid-library
 **Pros**  
 - This option might be more convenient for active development.
 - After making changes to the Web-eID library source and rebuilding the library project, you don't need to reinstall the dependency in your other project.
-
-**Cons**  
-- ES modules are located at `web-eid/dist/node/` instead of directly under `web-eid/`.
-  ```ts
-  import AuthenticateOptions from 'web-eid/dist/node/models/AuthenticateOptions';
-  ```
 
 #### Using `npm pack`
 
