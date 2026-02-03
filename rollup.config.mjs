@@ -34,13 +34,13 @@ export default {
       plugins:   [terser()],
     },
     {
-      file:      "dist/umd/web-eid.js",
+      file:      "dist/umd/web-eid.cjs",
       format:    "umd",
       name:      "webeid",
       sourcemap: true,
     },
     {
-      file:      "dist/umd/web-eid.min.js",
+      file:      "dist/umd/web-eid.min.cjs",
       format:    "umd",
       name:      "webeid",
       sourcemap: false,
