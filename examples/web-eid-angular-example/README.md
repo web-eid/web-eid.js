@@ -57,3 +57,22 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## Testing with production ID-cards
+
+Configure an HTTPS proxy with a valid SSL certificate trusted by the browser, for example ngrok.
+```shell
+ngrok http 4200
+```
+Obtain the external URL from the Forwarding section (e.g., 087a444b5747.ngrok-free.app) and configure the allowedHosts parameter in angular.json:
+```
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "options": {
+            "allowedHosts": ["087a444b5747.ngrok-free.app"]
+          },
+```
+Start the app with 
+```shell
+./node_modules/.bin/ng serve
+```
