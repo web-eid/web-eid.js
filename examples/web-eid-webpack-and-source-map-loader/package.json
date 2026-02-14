@@ -1,0 +1,23 @@
+{
+  "name": "web-eid-webpack-and-source-map-loader",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --mode=development"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "source-map-loader": "^5.0.0",
+    "webpack": "^5.104.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.3"
+  },
+  "dependencies": {
+    "@web-eid/web-eid-library": "~2.1.0-beta.0",
+    "lodash": "^4.17.21"
+  }
+}
