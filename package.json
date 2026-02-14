@@ -1,6 +1,6 @@
 {
   "name": "@web-eid/web-eid-library",
-  "version": "2.1.0-beta.0",
+  "version": "2.1.0-beta.1",
   "description": "",
   "scripts": {
     "lint": "eslint",
@@ -17,7 +17,16 @@
     "type": "git",
     "url": "git@github.com:web-eid/web-eid.js.git"
   },
-  "module": "web-eid.js",
+  "main": "./dist/umd/web-eid.js",
+  "module": "./dist/es/web-eid.js",
+  "exports": {
+    ".": {
+      "types": "./web-eid.d.ts",
+      "import": "./dist/es/web-eid.js",
+      "require": "./dist/umd/web-eid.min.js",
+      "default": "./dist/iife/web-eid.min.js"
+    }
+  },
   "files": [
     "config.d.ts",
     "config.d.ts.map",
@@ -40,18 +49,19 @@
   "license": "MIT",
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
-    "@stylistic/eslint-plugin-js": "^3.1.0",
-    "@stylistic/eslint-plugin-ts": "^3.0.1",
+    "@stylistic/eslint-plugin-js": "^4.4.1",
+    "@stylistic/eslint-plugin-ts": "^4.4.1",
     "@types/jest": "^29.5.14",
-    "eslint": "^9.19.0",
+    "eslint": "^9.39.2",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
-    "rimraf": "^6.0.1",
-    "rollup": "^4.34.0",
+    "rimraf": "^6.1.2",
+    "rollup": "^4.57.1",
     "rollup-plugin-cleanup": "^3.2.1",
-    "rollup-plugin-license": "^3.5.3",
-    "ts-jest": "^29.2.5",
-    "typescript": "^5.7.3",
-    "typescript-eslint": "^8.22.0"
+    "rollup-plugin-esbuild": "^6.2.1",
+    "rollup-plugin-license": "^3.6.0",
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.54.0"
   }
 }
