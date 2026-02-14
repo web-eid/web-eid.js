@@ -2,6 +2,7 @@ import path from "path";
 
 import cleanup from "rollup-plugin-cleanup";
 import { defineConfig } from "rollup";
+import { dts } from "rollup-plugin-dts";
 import esbuild from "rollup-plugin-esbuild";
 import license from "rollup-plugin-license";
 import terser from "@rollup/plugin-terser";
@@ -17,10 +18,11 @@ const licenseOpts = {
 };
 
 const outputModules = (format) => ({
-  dir:       `dist/${format}`,
-  format:    format,
-  exports:   "named",
-  sourcemap: true,
+  dir:             `dist/${format}`,
+  format:          format,
+  exports:         "named",
+  preserveModules: true,
+  sourcemap:       true,
 });
 const outputBundle = (format, ext) => ({
   file:      `dist/${format}/web-eid.${ext}`,
@@ -39,14 +41,29 @@ const outputMinifiedBundle = (format, ext) => ({
 });
 export default [
   defineConfig({
-    input:   "src/web-eid.ts",
-    plugins: [esbuild(), cleanup(cleanupOpts), license(licenseOpts)],
-    output:  [
+    input:   "src/index.ts",
+    plugins: [
+      esbuild({
+        target: "es2021",
+      }),
+      cleanup(cleanupOpts),
+      license(licenseOpts),
+    ],
+    output: [
       outputModules("es"),
       outputBundle("umd", "js"),
       outputMinifiedBundle("umd", "js"),
       outputBundle("iife", "js"),
       outputMinifiedBundle("iife", "js"),
     ],
+  }),
+  defineConfig({
+    input:   "src/index.ts",
+    plugins: [
+      dts(),
+      cleanup(cleanupOpts),
+      license(licenseOpts),
+    ],
+    output: [outputModules("es")],
   }),
 ];

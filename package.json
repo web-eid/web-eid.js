@@ -1,50 +1,37 @@
 {
   "name": "@web-eid/web-eid-library",
-  "version": "2.1.0-beta.1",
-  "description": "",
+  "version": "3.0.0-beta.0",
+  "description": "Secure authentication and digital signing with electronic ID smart cards for web applications",
   "scripts": {
     "lint": "eslint",
-    "build": "npm run clean && npm run compile && npm run bundle",
+    "build": "npm run clean && npm run bundle",
     "clean": "rimraf ./dist",
-    "compile": "tsc",
     "bundle": "rollup -c",
     "test": "jest -i --silent --verbose",
     "prepare": "npm run build",
-    "prepack": "npm run test && cp -R ./dist/node/* ./",
-    "postpack": "rimraf ./web-eid.js ./config.js ./errors ./models ./services ./utils ./*.d.ts ./*.map"
+    "prepack": "npm run test",
+    "postpack": "rimraf --glob ./web-eid.js ./config.js ./errors ./models ./services ./utils ./*.d.ts ./*.map"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com:web-eid/web-eid.js.git"
   },
   "main": "./dist/umd/web-eid.js",
-  "module": "./dist/es/web-eid.js",
+  "module": "./dist/es/index.js",
+  "types": "./dist/es/index.d.ts",
   "exports": {
     ".": {
-      "types": "./web-eid.d.ts",
-      "import": "./dist/es/web-eid.js",
-      "require": "./dist/umd/web-eid.min.js",
-      "default": "./dist/iife/web-eid.min.js"
+      "types": "./dist/es/index.d.ts",
+      "import": "./dist/es/index.js",
+      "require": "./dist/umd/web-eid.js",
+      "default": "./dist/iife/web-eid.js"
     }
   },
   "files": [
-    "config.d.ts",
-    "config.d.ts.map",
-    "config.js",
-    "config.js.map",
-    "web-eid.d.ts",
-    "web-eid.d.ts.map",
-    "web-eid.js",
-    "web-eid.js.map",
-    "errors/**/*",
-    "models/**/*",
-    "services/**/*",
-    "utils/**/*",
-    "dist/es/*",
+    "dist/es/**/*",
     "dist/iife/*",
     "dist/umd/*"
   ],
-  "types": "web-eid.d.ts",
   "author": "Tanel Metsar",
   "license": "MIT",
   "devDependencies": {
@@ -58,6 +45,7 @@
     "rimraf": "^6.1.2",
     "rollup": "^4.57.1",
     "rollup-plugin-cleanup": "^3.2.1",
+    "rollup-plugin-dts": "^6.3.0",
     "rollup-plugin-esbuild": "^6.2.1",
     "rollup-plugin-license": "^3.6.0",
     "ts-jest": "^29.4.6",
