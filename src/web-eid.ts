@@ -204,5 +204,15 @@ export async function sign(
   };
 }
 
-export { Action, ErrorCode };
+export {
+  Action,
+  ErrorCode
+};
+export type {
+  ActionOptions,
+  LibraryAuthenticateResponse,
+  LibraryGetSigningCertificateResponse,
+  LibrarySignResponse,
+  LibraryStatusResponse
+};
 export { config };
