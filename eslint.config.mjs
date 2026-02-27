@@ -1,7 +1,6 @@
 import eslint from "@eslint/js";
 import globals from "globals";
-import stylisticJs from "@stylistic/eslint-plugin-js";
-import stylisticTs from "@stylistic/eslint-plugin-ts";
+import stylistic from "@stylistic/eslint-plugin";
 import tseslint from "typescript-eslint";
 
 const sharedOptions = {
@@ -10,7 +9,7 @@ const sharedOptions = {
 
     languageOptions: {
       sourceType: "module",
-  
+
       globals: {
         ...globals.browser,
         ...globals.node,
@@ -25,16 +24,16 @@ const sharedOptions = {
 
     languageOptions: {
       sourceType: "module",
-  
+
       globals: {
         ...globals.browser,
         ...globals.node,
         ...globals.es2021,
         ...globals.webextensions,
       },
-    
+
       parser: tseslint.parser,
-      
+
       parserOptions: {
         project:         "./tsconfig.eslint.json",
         tsconfigRootDir: import.meta.dirname,
@@ -49,11 +48,11 @@ const overrides = {
 
     name: "web-eid/js/override",
 
-    plugins: { "@stylistic/js": stylisticJs },
-  
+    plugins: { "@stylistic/js": stylistic },
+
     rules: {
       "sort-imports": ["error", { allowSeparatedGroups: true }],
-  
+
       "@stylistic/js/quotes":                "error",
       "@stylistic/js/key-spacing":           ["error", { "align": "value" }],
       "@stylistic/js/comma-dangle":          ["error", "always-multiline"],
@@ -71,9 +70,9 @@ const overrides = {
 
     plugins: {
       "@typescript-eslint": tseslint.plugin,
-      "@stylistic/ts":      stylisticTs,
+      "@stylistic/ts":      stylistic,
     },
-  
+
     rules: {
       "@typescript-eslint/array-type": ["error", { default: "generic" }],
       "@stylistic/ts/semi":            "error",
@@ -83,7 +82,7 @@ const overrides = {
 
 export default [
   { ignores: ["dist/", "node_modules/"] },
-  
+
   {
     name: "eslint/recommended",
 
