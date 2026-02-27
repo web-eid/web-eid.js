@@ -22,7 +22,7 @@
 
 import * as webeid from "../web-eid";
 import ExtensionUnavailableError from "../errors/ExtensionUnavailableError";
-import NativeAppOptions from "../models/ActionOptions";
+import ActionOptions from "../models/ActionOptions";
 
 Object.defineProperty(global.window, "isSecureContext", { get: () => true });
 
@@ -79,7 +79,7 @@ describe("authenticate", () => {
   });
 
   it("should throw ExtensionUnavailableError on request timeout", async () => {
-    const options: NativeAppOptions = { userInteractionTimeout: 1, lang: "en" };
+    const options: ActionOptions = { userInteractionTimeout: 1, lang: "en" };
 
     const challengeNonce = "12345678901234567890123456789012345678901234";
 
@@ -89,7 +89,7 @@ describe("authenticate", () => {
   it("should include challengeNonce and libraryVersion with message to extension", async () => {
     jest.spyOn(window, "postMessage").mockImplementation();
 
-    const options: NativeAppOptions = { userInteractionTimeout: 1 };
+    const options: ActionOptions = { userInteractionTimeout: 1 };
 
     const challengeNonce = "12345678901234567890123456789012345678901234";
 
@@ -113,7 +113,7 @@ describe("authenticate", () => {
     jest.spyOn(window, "postMessage").mockImplementation();
 
     // Including userInteractionTimeout to speed up the test
-    const options: NativeAppOptions = { userInteractionTimeout: 1, lang: "en" };
+    const options: ActionOptions = { userInteractionTimeout: 1, lang: "en" };
 
     const challengeNonce = "12345678901234567890123456789012345678901234";
 
@@ -140,7 +140,7 @@ describe("getSigningCertificate", () => {
   });
 
   it("should throw ExtensionUnavailableError on request timeout", async () => {
-    const options: NativeAppOptions = { userInteractionTimeout: 1, lang: "en" };
+    const options: ActionOptions = { userInteractionTimeout: 1, lang: "en" };
 
     await expect(webeid.getSigningCertificate(options)).rejects.toThrow(ExtensionUnavailableError);
   });
@@ -148,7 +148,7 @@ describe("getSigningCertificate", () => {
   it("should include library version with message to extension", async () => {
     jest.spyOn(window, "postMessage").mockImplementation();
 
-    const options: NativeAppOptions = { userInteractionTimeout: 1 };
+    const options: ActionOptions = { userInteractionTimeout: 1 };
 
     try { await webeid.getSigningCertificate(options); } catch { /* ignore */ }
 
@@ -172,7 +172,7 @@ describe("getSigningCertificate", () => {
     jest.spyOn(window, "postMessage").mockImplementation();
 
     // Including userInteractionTimeout to speed up the test
-    const options: NativeAppOptions = { userInteractionTimeout: 1, lang: "en" };
+    const options: ActionOptions = { userInteractionTimeout: 1, lang: "en" };
 
     try { await webeid.getSigningCertificate(options); } catch { /* ignore */ }
 
@@ -196,7 +196,7 @@ describe("sign", () => {
   });
 
   it("should throw ExtensionUnavailableError on request timeout", async () => {
-    const options: NativeAppOptions = { userInteractionTimeout: 1, lang: "en" };
+    const options: ActionOptions = { userInteractionTimeout: 1, lang: "en" };
 
     const certificate  = "MIID7DCCA02gAwIBAgIQGWaqJX+JmHFbyFd4ba1pajAKBggqhkjOPQQDBDBgM...";
     const hash = "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4";
@@ -212,7 +212,7 @@ describe("sign", () => {
     const hash         = "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4";
     const hashFunction = "SHA-384";
 
-    const options: NativeAppOptions = { userInteractionTimeout: 1 };
+    const options: ActionOptions = { userInteractionTimeout: 1 };
 
     try { await webeid.sign(certificate, hash, hashFunction, options); } catch { /* ignore */ }
 
@@ -243,7 +243,7 @@ describe("sign", () => {
     const hashFunction = "SHA-384";
 
     // Including userInteractionTimeout to speed up the test
-    const options: NativeAppOptions = { userInteractionTimeout: 1, lang: "en" };
+    const options: ActionOptions = { userInteractionTimeout: 1, lang: "en" };
 
     try { await webeid.sign(certificate, hash, hashFunction, options); } catch { /* ignore */ }
 
