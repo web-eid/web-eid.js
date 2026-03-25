@@ -2,7 +2,12 @@ import { useContext, useState } from 'react'
 import { useSign } from '../hooks/useSign'
 import { AppContext } from '../context/AppContext'
 import { isKnownWebEidError } from '../utils/webEidUtils'
-import { ErrorCode } from '@web-eid/web-eid-library'
+import {
+  NativeFatalError,
+  UnknownError,
+  UserCancelledError,
+  UserTimeoutError,
+} from '@web-eid/web-eid-library';
 
 enum SigningSteps {
   Initial = 0,
@@ -30,22 +35,20 @@ export function SignPage() {
     } catch (error) {
       setStep(SigningSteps.Initial)
 
-      if (isKnownWebEidError(error)) {
-        switch (error.code) {
-          case ErrorCode.ERR_WEBEID_USER_CANCELLED:
-            setAlert('You cancelled the ID-card authentication.')
-            break
-
-          case ErrorCode.ERR_WEBEID_USER_TIMEOUT:
-            setAlert('Sorry, the ID-card PIN entry took too long.')
-            break
-
-          default:
-            setAlert(error.message)
-            break
-        }
+      if (error instanceof UserTimeoutError) {
+        setAlert("ID-card authentication timed out, please try again");
+      } else if (error instanceof UserCancelledError) {
+        setAlert("ID-card authentication was cancelled by the user");
+      } else if (error instanceof NativeFatalError) {
+        setAlert("Please try again. If the problem persists, contact support");
+      } else if (error instanceof IntegrationError) {
+        setAlert(`An internal error occurred. Please contact support! ${error.message} (${error.code})`);
+      } else if (error instanceof UnknownError) {
+        setAlert(`An unknown error occurred. Please try again and contact support if the problem persists! ${error.message} (${error.code})`);
       } else {
-        setAlert('Something went wrong.')
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        const errorCode = isKnownWebEidError(error) ? ` (${(error as any).code})` : "";
+        setAlert(`An unknown error occurred. Please try again and contact support if the problem persists! ${errorMessage}${errorCode}`);
       }
 
       throw error

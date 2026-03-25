@@ -1,7 +1,6 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { SignatureAlgorithm } from '@web-eid/web-eid-library/models/SignatureAlgorithm';
 
 import { SignService } from './sign.service';
 import { WebEidService } from './web-eid.service';
@@ -45,7 +44,7 @@ describe('SignService', () => {
     const documentId = '123';
     const lang = 'en';
     const certificate = 'certificate';
-    const supportedSignatureAlgorithms: SignatureAlgorithm[] = [
+    const supportedSignatureAlgorithms: any[] = [
       {
         "cryptoAlgorithm": "ECC",
         "hashFunction": "SHA-256",
@@ -71,7 +70,7 @@ describe('SignService', () => {
     service.signDocument(documentId).then(res => result = res);
 
     tick();
-  
+
     expect(webEidServiceSpy.getSigningCertificate).toHaveBeenCalledWith({ lang });
 
     const prepareReq = httpMock.expectOne(req =>
