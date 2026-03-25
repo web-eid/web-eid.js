@@ -21,8 +21,9 @@
  */
 
 import ErrorCode from "./ErrorCode";
+import DeveloperError from "./DeveloperError";
 
-export default class MissingParameterError extends Error {
+export default class MissingParameterError extends DeveloperError {
   public code: ErrorCode;
 
   constructor(message?: string) {

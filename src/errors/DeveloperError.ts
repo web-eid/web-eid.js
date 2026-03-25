@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2025 Estonian Information System Authority
+ * Copyright (c) 2020-2026 Estonian Information System Authority
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,16 +20,8 @@
  * SOFTWARE.
  */
 
-import ErrorCode from "./ErrorCode";
-import DeveloperError from "./DeveloperError";
-
-export default class ActionPendingError extends DeveloperError {
-  public code: ErrorCode;
-
-  constructor(message = "same action for Web-eID browser extension is already pending") {
+export default class DeveloperError extends Error {
+  constructor(message?: string) {
     super(message);
-
-    this.name = this.constructor.name;
-    this.code = ErrorCode.ERR_WEBEID_ACTION_PENDING;
   }
 }
