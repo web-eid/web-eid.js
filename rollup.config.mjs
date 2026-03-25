@@ -2,6 +2,7 @@ import path from "path";
 
 import cleanup from "rollup-plugin-cleanup";
 import license from "rollup-plugin-license";
+import resolve from "@rollup/plugin-node-resolve";
 import terser from "@rollup/plugin-terser";
 
 export default {
@@ -16,6 +17,9 @@ export default {
           encoding: "utf-8",
         },
       },
+    }),
+    resolve({
+      extensions: [".js"],
     }),
   ],
 

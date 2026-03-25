@@ -21,8 +21,9 @@
  */
 
 import ErrorCode from "./ErrorCode";
+import DeveloperError from "./DeveloperError";
 
-export default class NativeInvalidArgumentError extends Error {
+export default class NativeInvalidArgumentError extends DeveloperError {
   public code: ErrorCode;
 
   constructor(message = "native application received an invalid argument") {

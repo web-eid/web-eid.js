@@ -43,6 +43,19 @@ import Action from "./models/Action";
 import ActionOptions from "./models/ActionOptions";
 import ErrorCode from "./errors/ErrorCode";
 import MissingParameterError from "./errors/MissingParameterError";
+import {
+  ActionTimeoutError,
+  ContextInsecureError,
+  ExtensionUnavailableError,
+  DeveloperError,
+  NativeFatalError,
+  NativeUnavailableError,
+  UnknownError,
+  UserCancelledError,
+  UserTimeoutError,
+  VersionInvalidError,
+  VersionMismatchError,
+} from "./errors";
 import WebExtensionService from "./services/WebExtensionService";
 import config from "./config";
 import sleep from "./utils/sleep";
@@ -206,11 +219,22 @@ export async function sign(
 
 export {
   Action,
-  ErrorCode,
   ActionOptions,
+  ActionTimeoutError,
+  ContextInsecureError,
+  ErrorCode,
+  ExtensionUnavailableError,
+  DeveloperError,
   LibraryAuthenticateResponse,
   LibraryGetSigningCertificateResponse,
   LibrarySignResponse,
-  LibraryStatusResponse
+  LibraryStatusResponse,
+  NativeFatalError,
+  NativeUnavailableError,
+  UnknownError,
+  UserCancelledError,
+  UserTimeoutError,
+  VersionInvalidError,
+  VersionMismatchError,
 };
 export { config };
