@@ -1,7 +1,17 @@
 import { useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import { isKnownWebEidError } from '../utils/webEidUtils'
-import { ErrorCode } from '@web-eid/web-eid-library'
+import {
+  ContextInsecureError,
+  ExtensionUnavailableError,
+  NativeFatalError,
+  NativeUnavailableError,
+  UnknownError,
+  UserCancelledError,
+  UserTimeoutError,
+  VersionInvalidError,
+  VersionMismatchError
+} from '@web-eid/web-eid-library';
 import { useNavigate } from 'react-router'
 
 export function AuthIdCard() {
@@ -18,31 +28,36 @@ export function AuthIdCard() {
       await loginWithIdCard()
       navigate('/sign')
     } catch (error) {
-      if (isKnownWebEidError(error)) {
-        switch (error.code) {
-          case ErrorCode.ERR_WEBEID_USER_CANCELLED:
-            setAlert('You cancelled the ID-card authentication.')
-            break
-
-          case ErrorCode.ERR_WEBEID_USER_TIMEOUT:
-            setAlert('Sorry, the ID-card PIN entry took too long.')
-            break
-
-          case ErrorCode.ERR_WEBEID_NATIVE_FATAL:
-            if (window.location.hostname === 'localhost' && window.location.protocol === 'http:') {
-              setAlert(
-                'HTTPS is required for Web-eID authentication.\n' + 
-                'For development, you can allow HTTP for localhost in the Web eID DevTools.'
-              )
-            }
-            break
-
-          default:
-            setAlert(error.message)
-            break
+      if (error instanceof UserTimeoutError) {
+        setAlert("ID-card authentication timed out, please try again");
+      } else if (error instanceof UserCancelledError) {
+        setAlert("ID-card authentication was cancelled by the user");
+      } else if (error instanceof ExtensionUnavailableError) {
+        setAlert("Web eID browser extension is not available, please install it or enable it to continue");
+      } else if (error instanceof NativeUnavailableError) {
+        setAlert("Web eID native application is not installed, please install it to continue");
+      } else if (error instanceof VersionInvalidError) {
+        setAlert("Web eID native application did not provide a valid version string during handshake, please report a bug");
+      } else if (error instanceof VersionMismatchError) {
+        if (error.requiresUpdate?.extension) {
+          setAlert("Please update the Web eID browser extension");
+        } else if (error.requiresUpdate?.nativeApp) {
+          setAlert("Please update the Web eID native application");
+        } else {
+          setAlert("Please update the Web eID native application and browser extension");
         }
+      } else if (error instanceof ContextInsecureError) {
+        setAlert("Web eID requires a secure HTTPS connection. Please contact the website administrator");
+      } else if (error instanceof NativeFatalError) {
+        setAlert("Please try again. If the problem persists, contact support");
+      } else if (error instanceof IntegrationError) {
+        setAlert(`An internal error occurred. Please contact support! ${error.message} (${error.code})`);
+      } else if (error instanceof UnknownError) {
+        setAlert(`An unknown error occurred. Please try again and contact support if the problem persists! ${error.message} (${error.code})`);
       } else {
-        setAlert('Something went wrong.')
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        const errorCode = isKnownWebEidError(error) ? ` (${(error as any).code})` : "";
+        setAlert(`An unknown error occurred. Please try again and contact support if the problem persists! ${errorMessage}${errorCode}`);
       }
 
       throw error

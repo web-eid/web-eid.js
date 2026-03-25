@@ -52,3 +52,22 @@ export default tseslint.config({
   },
 })
 ```
+## Testing with production ID-cards
+
+Configure an HTTPS proxy with a valid SSL certificate trusted by the browser, for example ngrok.
+```shell
+ngrok http 4173
+```
+Obtain the external URL from the Forwarding section (e.g., 087a444b5747.ngrok-free.app) and configure the allowedHosts parameter in vite.config.ts:
+```
+  preview: {
+    allowedHosts: [
+      "087a444b5747.ngrok-free.app"
+    ]
+  }          
+```
+Start the app with
+```shell
+npm run preview
+```
+
