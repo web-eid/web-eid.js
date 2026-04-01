@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
   ContextInsecureError,
+  DeveloperError,
   ExtensionUnavailableError,
   NativeFatalError,
   NativeUnavailableError,
@@ -59,8 +60,8 @@ export class AuthIdCardComponent {
         this.alert = "Web eID requires a secure HTTPS connection. Please contact the website administrator";
       } else if (error instanceof NativeFatalError) {
         this.alert = "Please try again. If the problem persists, contact support";
-      } else if (error instanceof IntegrationError) {
-        this.alert = `An internal error occurred. Please contact support! ${error.message} (${error.code})`;
+      } else if (error instanceof DeveloperError) {
+        this.alert = `An internal error occurred. Please contact support! ${error.message}`;
       } else if (error instanceof UnknownError) {
         this.alert = `An unknown error occurred. Please try again and contact support if the problem persists! ${error.message} (${error.code})`;
       } else {
