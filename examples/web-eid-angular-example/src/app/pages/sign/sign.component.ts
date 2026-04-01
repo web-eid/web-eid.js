@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { SignService } from '../../core/services/sign.service';
 import {
+  DeveloperError,
   NativeFatalError,
   UnknownError,
   UserCancelledError,
@@ -47,8 +48,8 @@ export class SignComponent {
         this.alert = "ID-card authentication was cancelled by the user";
       } else if (error instanceof NativeFatalError) {
         this.alert = "Please try again. If the problem persists, contact support";
-      } else if (error instanceof IntegrationError) {
-        this.alert = `An internal error occurred. Please contact support! ${error.message} (${error.code})`;
+      } else if (error instanceof DeveloperError) {
+        this.alert = `An internal error occurred. Please contact support! ${error.message}`;
       } else if (error instanceof UnknownError) {
         this.alert = `An unknown error occurred. Please try again and contact support if the problem persists! ${error.message} (${error.code})`;
       } else {

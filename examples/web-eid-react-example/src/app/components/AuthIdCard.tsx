@@ -3,6 +3,7 @@ import { useAuth } from '../hooks/useAuth'
 import { isKnownWebEidError } from '../utils/webEidUtils'
 import {
   ContextInsecureError,
+  DeveloperError,
   ExtensionUnavailableError,
   NativeFatalError,
   NativeUnavailableError,
@@ -50,8 +51,8 @@ export function AuthIdCard() {
         setAlert("Web eID requires a secure HTTPS connection. Please contact the website administrator");
       } else if (error instanceof NativeFatalError) {
         setAlert("Please try again. If the problem persists, contact support");
-      } else if (error instanceof IntegrationError) {
-        setAlert(`An internal error occurred. Please contact support! ${error.message} (${error.code})`);
+      } else if (error instanceof DeveloperError) {
+        setAlert(`An internal error occurred. Please contact support! ${error.message}`);
       } else if (error instanceof UnknownError) {
         setAlert(`An unknown error occurred. Please try again and contact support if the problem persists! ${error.message} (${error.code})`);
       } else {
