@@ -53,13 +53,16 @@ const overrides = {
     rules: {
       "sort-imports": ["error", { allowSeparatedGroups: true }],
 
-      "@stylistic/js/quotes":                "error",
+      "@stylistic/js/quotes":                ["error", "double"],
       "@stylistic/js/key-spacing":           ["error", { "align": "value" }],
       "@stylistic/js/comma-dangle":          ["error", "always-multiline"],
       "@stylistic/js/object-curly-spacing":  ["error", "always"],
       "@stylistic/js/array-bracket-spacing": "error",
       "@stylistic/js/indent":                ["error", 2, { "SwitchCase": 1 }],
       "@stylistic/js/semi":                  "error",
+      "@stylistic/js/eol-last":              ["warn", "always"],
+      "@stylistic/js/linebreak-style":       ["error", "unix"],
+      "@stylistic/js/max-len":               ["error", { code: 160 }],
     },
   },
 
@@ -74,14 +77,21 @@ const overrides = {
     },
 
     rules: {
-      "@typescript-eslint/array-type": ["error", { default: "generic" }],
-      "@stylistic/ts/semi":            "error",
+      "@typescript-eslint/array-type":      ["error", { default: "generic" }],
+      "@stylistic/ts/semi":                 "error",
+      "@stylistic/ts/quotes":               ["error", "double"],
+      "@stylistic/ts/comma-dangle":         ["error", "always-multiline"],
+      "@stylistic/ts/object-curly-spacing": ["error", "always"],
+      "@stylistic/ts/indent":               ["error", 2, { "SwitchCase": 1 }],
+      "@stylistic/ts/eol-last":             ["error", "always"],
+      "@stylistic/ts/linebreak-style":      ["error", "unix"],
+      "@stylistic/ts/max-len":              ["error", { code: 160 }],
     },
   },
 };
 
 export default [
-  { ignores: ["dist/", "node_modules/"] },
+  { ignores: ["dist/", "node_modules/", "examples/"] },
 
   {
     name: "eslint/recommended",

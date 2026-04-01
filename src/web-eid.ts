@@ -104,7 +104,7 @@ export async function status(): Promise<LibraryStatusResponse> {
 
 export async function authenticate(
   challengeNonce: string,
-  options?: ActionOptions
+  options?: ActionOptions,
 ): Promise<LibraryAuthenticateResponse> {
   await extensionLoadDelay();
 
