@@ -22,7 +22,7 @@
 
 import {
   serializeError,
-  deserializeError
+  deserializeError,
 } from ".././errorSerializer";
 
 import ActionPendingError from "../../errors/ActionPendingError";
@@ -184,7 +184,7 @@ describe("errorSerializer", () => {
       const originalError = new VersionMismatchError(
         "Update required for native app",
         versions,
-        requiresUpdate
+        requiresUpdate,
       );
 
       const serialized   = serializeError(originalError);
