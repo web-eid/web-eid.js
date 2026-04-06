@@ -91,7 +91,19 @@ const overrides = {
 };
 
 export default [
-  { ignores: ["dist/", "node_modules/", "examples/"] },
+  {
+    ignores: [
+      "dist/",
+      "node_modules/",
+      "examples/",
+      "web-eid.*",
+      "config.*",
+      "errors/",
+      "models/",
+      "services/",
+      "utils/",
+    ],
+  },
 
   {
     name: "eslint/recommended",
