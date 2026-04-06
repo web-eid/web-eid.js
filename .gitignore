@@ -1,7 +1,7 @@
 node_modules
 .vscode
-/web-eid.js
-/config.js
+/web-eid.*
+/config.*
 /errors
 /models
 /services
