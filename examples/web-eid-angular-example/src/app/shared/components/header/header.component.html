@@ -1,0 +1,27 @@
+<header class="container">
+  <nav class="navbar px-2 navbar-expand-lg navbar-light bg-light d-flex flex-nowrap overflow-hidden justify-content-between">
+    <a routerLink="/" aria-label="Homepage">
+      <img class="logo" alt="eID logo" src="site_logo.png">
+    </a>
+
+    <div class="actions">
+      <div class="vr mx-1"></div>
+
+      <div class="language">
+        <label for="language">Web eID language:</label>
+        <select class="form-select" name="language" id="language" [(ngModel)]="language">
+          @for (lang of languageOptions; track lang.code) {
+            <option [value]="lang.code">{{ lang.label }}</option>
+          }
+        </select>
+      </div>
+
+      @if (authService.isLoggedIn()) {
+        <div class="vr mx-1"></div>
+
+        <button type="button" class="btn btn-primary" (click)="logout()">Logout</button>
+      }
+    </div>
+ 
+  </nav>
+</header>

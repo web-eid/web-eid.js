@@ -1,0 +1,40 @@
+import { useContext } from 'react'
+import { AppContext } from '../context/AppContext'
+import { AuthIdCard } from '../components/AuthIdCard'
+import { NavLink } from 'react-router'
+
+export function WelcomePage() {
+  const {
+    state: {
+      auth: { loggedIn, user }
+    }
+  } = useContext(AppContext)
+
+  return (
+    <>
+      <h2>Web eID: electronic ID smart cards on the Web</h2>
+      <p>
+        The Web eID project enables usage of European Union electronic identity (eID) smart cards for
+        secure authentication and digital signing of documents on the web using public-key cryptography.
+      </p>
+      <p>
+        Please get in touch by email at <a href="mailto:help@ria.ee">help&#64;ria.ee</a> in case you need support with adding Web eID to your project
+        or want to add support for a new eID card to Web eID.
+      </p>
+      <p>This page serves as an example of how Web eID can be integrated with a React project.</p>
+      <hr />
+
+      <h3>Authentication demo</h3>
+      {loggedIn ? (
+        <>
+          <p>You are logged in as {user?.sub}.</p>
+          <p>
+            You can <NavLink to="/sign" aria-label="Homepage" end>try signing a document</NavLink>.
+          </p>
+        </>
+      ) : (
+        <AuthIdCard />
+      )}
+    </>
+  )
+}
