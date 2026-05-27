@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Estonian Information System Authority
+# SPDX-License-Identifier: MIT
+
 name: "Coverity"
 
 on:
@@ -14,12 +17,12 @@ jobs:
       TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}
       PROJECTNAME: ${{ github.repository }}
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - uses: actions/setup-node@v5
       with:
         node-version: '20.x'
     - name: Cache Node.js modules
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         # npm cache files are stored in `~/.npm` on Linux/macOS
         path: ~/.npm
