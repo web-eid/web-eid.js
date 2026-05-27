@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Estonian Information System Authority
+# SPDX-License-Identifier: MIT
+
 name: Build and bundle library
 
 on: [push, pull_request]
@@ -7,12 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - uses: actions/setup-node@v5
       with:
         node-version: '20.x'
     - name: Cache Node.js modules
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         # npm cache files are stored in `~/.npm` on Linux/macOS
         path: ~/.npm
@@ -26,8 +29,15 @@ jobs:
       run: npm run test
     - name: Build
       run: npm run build
+    - name: Generate SBOM
+      run: npm sbom --sbom-format spdx --package-lock-only > web-eid.js-$(node -p "require('./package.json').version").spdx
     - name: Upload artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: web-eid-js-${{github.run_number}}
         path: dist/
+    - name: Upload SBOM artifacts
+      uses: actions/upload-artifact@v7
+      with:
+        name: web-eid-js-sbom-${{github.run_number}}
+        path: "*.spdx"

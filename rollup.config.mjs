@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
+
 import path from "path";
 
 import cleanup from "rollup-plugin-cleanup";
