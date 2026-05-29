@@ -744,8 +744,8 @@ Errors returned by the library have a `code` property which contains the program
 
 To avoid typos, you can use the `ErrorCode` enum to refer to the codes.
 
-**Example**
-The `examples` directory contains fully working applications demonstrating authentication and digital signing. 
+**Example**  
+The `examples` directory contains fully working applications demonstrating authentication and digital signing error handling.
 
 There is two approaches to handle errors:
 ```ts
