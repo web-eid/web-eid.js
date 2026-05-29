@@ -745,9 +745,9 @@ Errors returned by the library have a `code` property which contains the program
 To avoid typos, you can use the `ErrorCode` enum to refer to the codes.
 
 **Example**  
-The `examples` directory contains fully working applications demonstrating authentication and digital signing error handling.
+The `examples` directory contains fully working applications demonstrating how to hanlde authentication and digital signing errors.
 
-There is two approaches to handle errors:
+There are two approaches to handling errors:
 ```ts
 // by Error instance
 const onLogin = async () => {
