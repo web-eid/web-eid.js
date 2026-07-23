@@ -7,22 +7,30 @@ on:
   push:
     branches: [ "coverity_scan" ]
 
-jobs:
+permissions:
+  contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
   coverity:
     name: Run Coverity tests
     if: github.repository == 'web-eid/web-eid.js'
     runs-on: ubuntu-latest
+    timeout-minutes: 120
     env:
-      TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}
       PROJECTNAME: ${{ github.repository }}
     steps:
-    - uses: actions/checkout@v6
-    - uses: actions/setup-node@v5
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+    - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
       with:
         node-version: '20.x'
     - name: Cache Node.js modules
-      uses: actions/cache@v5
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         # npm cache files are stored in `~/.npm` on Linux/macOS
         path: ~/.npm
@@ -33,22 +41,37 @@ jobs:
     - name: Install dependencies
       run: npm ci
     - name: Download Coverity Build Tool
+      env:
+        TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}
       run: |
-        curl --silent --data "token=$TOKEN&project=$PROJECTNAME" -o cov-analysis-linux64.tar.gz https://scan.coverity.com/download/cxx/linux64
-        mkdir cov-analysis-linux64
-        tar xzf cov-analysis-linux64.tar.gz --strip 1 -C cov-analysis-linux64
+        curl --fail-with-body --show-error --silent --location \
+          --proto '=https' \
+          --proto-redir '=https' \
+          --retry 3 \
+          --data-urlencode "token=$TOKEN" \
+          --data-urlencode "project=$PROJECTNAME" \
+          --output cov-analysis-linux64.tar.gz \
+          https://scan.coverity.com/download/cxx/linux64
+
     - name: Build
       run: |
+        mkdir cov-analysis-linux64
+        tar xzf cov-analysis-linux64.tar.gz --strip 1 -C cov-analysis-linux64
         export PATH=$PWD/cov-analysis-linux64/bin:$PATH
         coverity capture --dir cov-int --project-dir . --file-include-regex '(^|/)(src|lib)/.*\.(js|ts|tsx)$' --file-exclude-regex '(^|/)(node_modules|dist|build)(/|$)'
-    - name: Submit the result to Coverity Scan
-      run: |
         tar czvf upload.tgz cov-int
-        curl --silent \
-          --form project=$PROJECTNAME \
-          --form token=$TOKEN \
-          --form email=eid-teenusehaldus@ria.ee \
-          --form file=@upload.tgz \
-          --form version=master \
-          --form description="Github Actions CI build" \
+
+    - name: Submit the result to Coverity Scan
+      env:
+        TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}
+      run: |
+        curl --fail-with-body --show-error --silent --location \
+          --proto '=https' \
+          --proto-redir '=https' \
+          --form "project=$PROJECTNAME" \
+          --form "token=$TOKEN" \
+          --form "email=eid-teenusehaldus@ria.ee" \
+          --form "file=@upload.tgz" \
+          --form "version=master" \
+          --form "description=Github Actions CI build" \
           https://scan.coverity.com/builds?project=$PROJECTNAME
