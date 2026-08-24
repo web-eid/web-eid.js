@@ -1,14 +1,23 @@
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import * as webeid from '@web-eid/web-eid-library'
+
 import { AppContext } from '../context/AppContext'
 import { AuthIdCard } from '../components/AuthIdCard'
 import { NavLink } from 'react-router'
 
 export function WelcomePage() {
+  const [webEidStatus, setWebEidStatus] = useState<string>()
   const {
     state: {
       auth: { loggedIn, user }
     }
   } = useContext(AppContext)
+
+  useEffect(() => {
+    void webeid.status()
+      .then((status) => setWebEidStatus(JSON.stringify(status)))
+      .catch(() => null)
+  }, [])
 
   return (
     <>
@@ -22,6 +31,9 @@ export function WelcomePage() {
         or want to add support for a new eID card to Web eID.
       </p>
       <p>This page serves as an example of how Web eID can be integrated with a React project.</p>
+      {webEidStatus && (
+        <p>Web eID status: {webEidStatus}</p>
+      )}
       <hr />
 
       <h3>Authentication demo</h3>
