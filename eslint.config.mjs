@@ -3,6 +3,7 @@
 
 import eslint from "@eslint/js";
 import globals from "globals";
+import jest from "eslint-plugin-jest";
 import stylistic from "@stylistic/eslint-plugin";
 import tseslint from "typescript-eslint";
 
@@ -93,6 +94,27 @@ const overrides = {
   },
 };
 
+const testOverrides = {
+  files: ["**/__tests__/**/*.ts"],
+
+  name: "web-eid/tests/override",
+
+  languageOptions: {
+    globals: {
+      ...globals.jest,
+    },
+  },
+
+  plugins: {
+    jest,
+  },
+
+  rules: {
+    "@typescript-eslint/unbound-method": "off",
+    "jest/unbound-method":               "error",
+  },
+};
+
 export default [
   {
     ignores: [
@@ -127,4 +149,6 @@ export default [
 
   overrides.js,
   overrides.ts,
+
+  testOverrides,
 ];
