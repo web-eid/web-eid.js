@@ -1,0 +1,31 @@
+.actions {
+  display: flex;
+  gap: 1rem;
+
+  .language {
+    display: flex;
+    gap: 0.5rem;
+
+    align-items: center;
+
+    label {
+      flex: 0 0 auto;
+    }
+
+    select {
+      width: auto;
+    }
+  }
+}
+
+@media screen and (max-width: 599px) {
+  .actions .language label {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 449px) {
+  .logo {
+    width: 2rem;
+  }
+}
