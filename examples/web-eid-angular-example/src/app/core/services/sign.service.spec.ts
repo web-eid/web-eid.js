@@ -7,12 +7,16 @@ import { WebEidService } from './web-eid.service';
 import { LanguageService } from './language.service';
 
 describe('SignService', () => {
+  const xsrfToken = 'bdf3f5d0-e0a4-4b3c-8461-e6aa799aa1f0';
+
   let service: SignService;
   let httpMock: HttpTestingController;
   let webEidServiceSpy: jasmine.SpyObj<WebEidService>;
   let languageServiceSpy: jasmine.SpyObj<LanguageService>;
 
   beforeEach(() => {
+    document.cookie = `XSRF-TOKEN=${ xsrfToken }; path=/`;
+
     const webEidSpy = jasmine.createSpyObj('WebEidService', ['getSigningCertificate', 'sign']);
     const languageSpy = jasmine.createSpyObj('LanguageService', ['language']);
 
@@ -34,6 +38,7 @@ describe('SignService', () => {
 
   afterEach(() => {
     httpMock.verify();
+    document.cookie = 'XSRF-TOKEN=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
   });
 
   it('should be created', () => {
@@ -79,6 +84,8 @@ describe('SignService', () => {
       req.params.get('documentId') === documentId
     );
     expect(prepareReq.request.method).toBe('POST');
+    expect(prepareReq.request.withCredentials).toBeTrue();
+    expect(prepareReq.request.headers.get('X-XSRF-TOKEN')).toBe(xsrfToken);
     prepareReq.flush({ hash, hashFunction });
 
     tick();
@@ -89,6 +96,8 @@ describe('SignService', () => {
       req.params.get('documentId') === documentId
     );
     expect(finalizeReq.request.method).toBe('POST');
+    expect(finalizeReq.request.withCredentials).toBeTrue();
+    expect(finalizeReq.request.headers.get('X-XSRF-TOKEN')).toBe(xsrfToken);
     finalizeReq.flush(finalizeSigningResponse);
 
     tick();

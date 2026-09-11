@@ -1,4 +1,5 @@
 import { setupWorker } from "msw/browser";
+import { config } from "../app/config";
 import authHandlers from "./handlers/auth.handlers";
 import signHandlers from "./handlers/sign.handlers";
 
@@ -7,7 +8,11 @@ async function mockServerResponses() {
 }
 
 function mockCsrfCookie() {
-  const mockCsrfToken = `mock_csrf_${ Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(16) }`;
+  if (config.backendApiUrl) {
+    return;
+  }
+
+  const mockCsrfToken = window.crypto.randomUUID();
 
   document.cookie = `XSRF-TOKEN=${ mockCsrfToken }; path=/; Secure; SameSite=Strict`;
 }

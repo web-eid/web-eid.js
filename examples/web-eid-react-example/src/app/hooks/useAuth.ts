@@ -53,9 +53,9 @@ export function useAuth() {
 
   async function logout() {
     dispatch({ type: ActionType.LOGOUT })
-  
+
     try {
-      await apiFetch('/auth/logout', {
+      await apiFetch('/logout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       })

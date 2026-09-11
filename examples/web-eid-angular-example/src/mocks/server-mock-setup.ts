@@ -2,14 +2,24 @@ import { setupWorker } from "msw/browser";
 import authHandlers from "./handlers/auth.handlers";
 import signHandlers from "./handlers/sign.handlers";
 
+declare const WEB_EID_BACKEND_API_URL: string | undefined;
+
 async function mockServerResponses() {
   await setupWorker(...authHandlers, ...signHandlers).start({ onUnhandledRequest: "bypass" });
 }
 
 function mockCsrfCookie() {
-  const mockCsrfToken = `mock_csrf_${ Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(16) }`;
+  if (hasConfiguredBackendApiUrl()) {
+    return;
+  }
+
+  const mockCsrfToken = window.crypto.randomUUID();
 
   document.cookie = `XSRF-TOKEN=${ mockCsrfToken }; path=/; Secure; SameSite=Strict`;
+}
+
+function hasConfiguredBackendApiUrl() {
+  return typeof WEB_EID_BACKEND_API_URL === "string" && WEB_EID_BACKEND_API_URL.trim().length > 0;
 }
 
 export default async function initServerMock() {

@@ -12,6 +12,14 @@ ng serve
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
+To use a backend API served from a different host or port while keeping the same request paths, define
+`WEB_EID_BACKEND_API_URL` when starting the development server. Cross-origin requests are sent with credentials, so the
+backend must allow credentialed CORS requests from the Angular origin and allow the `X-XSRF-TOKEN` header.
+
+```bash
+ng serve --define WEB_EID_BACKEND_API_URL='"http://localhost:8080"'
+```
+
 ## Code scaffolding
 
 Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
