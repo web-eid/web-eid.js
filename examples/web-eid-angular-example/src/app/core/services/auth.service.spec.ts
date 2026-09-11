@@ -8,6 +8,8 @@ import { LanguageService } from './language.service';
 import { WebEidService } from './web-eid.service';
 
 describe('AuthService', () => {
+  const xsrfToken = 'bdf3f5d0-e0a4-4b3c-8461-e6aa799aa1f0';
+
   let service: AuthService;
   let httpMock: HttpTestingController;
   let languageService: jasmine.SpyObj<LanguageService>;
@@ -32,12 +34,16 @@ describe('AuthService', () => {
     const authPromise = service.authenticate();
     let req = httpMock.expectOne('/auth/challenge');
     expect(req.request.method).toBe('GET');
+    expect(req.request.withCredentials).toBeTrue();
+    expect(req.request.headers.has('X-XSRF-TOKEN')).toBeFalse();
     req.flush({ nonce });
 
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     req = httpMock.expectOne('/auth/login');
     expect(req.request.method).toBe('POST');
+    expect(req.request.withCredentials).toBeTrue();
+    expect(req.request.headers.get('X-XSRF-TOKEN')).toBe(xsrfToken);
     expect(req.request.body).toEqual({ 'auth-token': authToken });
     req.flush({});
 
@@ -47,6 +53,8 @@ describe('AuthService', () => {
   }
 
   beforeEach(() => {
+    document.cookie = `XSRF-TOKEN=${ xsrfToken }; path=/`;
+
     const languageServiceSpy = jasmine.createSpyObj('LanguageService', ['language']);
     const webEidServiceSpy = jasmine.createSpyObj(
       'WebEidService', 
@@ -72,6 +80,7 @@ describe('AuthService', () => {
 
   afterEach(() => {
     httpMock.verify();
+    document.cookie = 'XSRF-TOKEN=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
   });
 
   it('should be created', () => {
@@ -83,6 +92,8 @@ describe('AuthService', () => {
 
     const req = httpMock.expectOne('/auth/user');
     expect(req.request.method).toBe('GET');
+    expect(req.request.withCredentials).toBeTrue();
+    expect(req.request.headers.has('X-XSRF-TOKEN')).toBeFalse();
     req.flush({ sub: 'testuser', auth: '[ROLE_USER]' });
 
     await statusPromise;
@@ -94,6 +105,8 @@ describe('AuthService', () => {
     service.fetchUserInfo();
     const req = httpMock.expectOne('/auth/user');
     expect(req.request.method).toBe('GET');
+    expect(req.request.withCredentials).toBeTrue();
+    expect(req.request.headers.has('X-XSRF-TOKEN')).toBeFalse();
     req.flush('Unauthorized', { status: 401, statusText: 'Unauthorized' });
 
     expect(isLoggedInSignal()).toBeFalse();
@@ -113,6 +126,8 @@ describe('AuthService', () => {
   
     const req = httpMock.expectOne('/auth/challenge');
     expect(req.request.method).toBe('GET');
+    expect(req.request.withCredentials).toBeTrue();
+    expect(req.request.headers.has('X-XSRF-TOKEN')).toBeFalse();
     req.flush({ nonce });
   
     await expectAsync(authPromise).toBeRejectedWith('Authentication failed');
@@ -125,8 +140,10 @@ describe('AuthService', () => {
     
     const logoutPromise = service.logout();
 
-    let req = httpMock.expectOne('/auth/logout');
+    let req = httpMock.expectOne('/logout');
     expect(req.request.method).toBe('POST');
+    expect(req.request.withCredentials).toBeTrue();
+    expect(req.request.headers.get('X-XSRF-TOKEN')).toBe(xsrfToken);
     req.flush({});
 
     await logoutPromise;
@@ -139,8 +156,10 @@ describe('AuthService', () => {
 
     const logoutPromise = service.logout();
 
-    const req = httpMock.expectOne('/auth/logout');
+    const req = httpMock.expectOne('/logout');
     expect(req.request.method).toBe('POST');
+    expect(req.request.withCredentials).toBeTrue();
+    expect(req.request.headers.get('X-XSRF-TOKEN')).toBe(xsrfToken);
     req.flush('Network error', { status: 500, statusText: 'Network error' });
 
     try {

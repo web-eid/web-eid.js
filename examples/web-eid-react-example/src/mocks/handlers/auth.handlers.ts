@@ -84,7 +84,7 @@ export default [
     })
   }),
 
-  http.post("/auth/logout", async ({ cookies }) => {
+  http.post("/logout", async ({ cookies }) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     sessionStorage.clear();

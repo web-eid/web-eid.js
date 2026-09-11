@@ -2,8 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { computed, Injectable, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
+import { backendApiUrl } from './backend-api-url';
 import { LanguageService } from './language.service';
 import { WebEidService } from './web-eid.service';
+import { XsrfTokenHeadersService } from './xsrf-token-headers.service';
 
 enum AuthState {
   Unknown,
@@ -26,13 +28,14 @@ export class AuthService {
     private webEidService: WebEidService,
     private languageService: LanguageService,
     private http: HttpClient,
+    private xsrfTokenHeadersService: XsrfTokenHeadersService,
   ) { }
 
   async fetchUserInfo() {
     try {
       this.user = await firstValueFrom(
-        this.http.get<typeof this.user>('/auth/user', {
-          headers: { 'Content-Type': 'application/json' },
+        this.http.get<typeof this.user>(backendApiUrl('/auth/user'), {
+          withCredentials: true,
         })
       );
 
@@ -60,8 +63,8 @@ export class AuthService {
 
   async authenticate(): Promise<void> {
     const { nonce } = await firstValueFrom(
-      this.http.get<{ nonce: string }>('/auth/challenge', {
-        headers: { 'Content-Type': 'application/json' },
+      this.http.get<{ nonce: string }>(backendApiUrl('/auth/challenge'), {
+        withCredentials: true,
       })
     );
 
@@ -72,8 +75,9 @@ export class AuthService {
     };
 
     const authTokenResult = await firstValueFrom(
-      this.http.post<typeof this.user>('/auth/login', body, {
-        headers: { 'Content-Type': 'application/json' },
+      this.http.post<typeof this.user>(backendApiUrl('/auth/login'), body, {
+        headers: this.xsrfTokenHeadersService.addXsrfToken(this.headers),
+        withCredentials: true,
       })
     );
 
@@ -84,8 +88,9 @@ export class AuthService {
 
   async logout(): Promise<void> {
     await firstValueFrom(
-      this.http.post('/auth/logout', {}, {
-        headers: { 'Content-Type': 'application/json' },
+      this.http.post(backendApiUrl('/logout'), {}, {
+        headers: this.xsrfTokenHeadersService.addXsrfToken(this.headers),
+        withCredentials: true,
       })
     );
 

@@ -7,7 +7,7 @@ async function mockServerResponses() {
 }
 
 function mockCsrfCookie() {
-  const mockCsrfToken = `mock_csrf_${ Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(16) }`;
+  const mockCsrfToken = window.crypto.randomUUID();
 
   document.cookie = `XSRF-TOKEN=${ mockCsrfToken }; path=/; Secure; SameSite=Strict`;
 }

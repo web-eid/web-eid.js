@@ -1,4 +1,7 @@
+const backendApiUrl = import.meta.env.VITE_WEB_EID_BACKEND_API_URL?.trim().replace(/\/$/, '') ?? ''
+
 export const config = {
+  backendApiUrl,
   languages: [
     { code: 'et', label: 'Eesti' },
     { code: 'en', label: 'English' },
