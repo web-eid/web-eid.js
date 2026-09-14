@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
+
 import ActionTimeoutError from "./ActionTimeoutError";
 import ContextInsecureError from "./ContextInsecureError";
 import ExtensionUnavailableError from "./ExtensionUnavailableError";
