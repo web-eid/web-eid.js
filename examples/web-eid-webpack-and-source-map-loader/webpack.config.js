@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import HtmlWebpackPlugin from "html-webpack-plugin";

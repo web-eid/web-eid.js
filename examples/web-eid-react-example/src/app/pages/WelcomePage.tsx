@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
 import { useContext, useEffect, useState } from 'react'
 import * as webeid from '@web-eid/web-eid-library'
 

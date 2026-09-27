@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
 import { useContext, useEffect } from 'react'
 import { AppContext } from '../context/AppContext'
 import { useNavigate } from 'react-router'

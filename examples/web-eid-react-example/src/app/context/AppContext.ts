@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
 import { ActionDispatch, createContext } from 'react'
 import { initialState, State } from '../state/reducer'
 import { Action } from '../state/actions'

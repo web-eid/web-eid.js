@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
 import Header from './components/Header'
 import { BrowserRouter, Routes, Route } from 'react-router'
 import { WelcomePage } from './pages/WelcomePage'

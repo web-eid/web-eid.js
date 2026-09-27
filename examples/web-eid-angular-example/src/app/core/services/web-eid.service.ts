@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
 import { Injectable } from '@angular/core';
 
 import * as webeid from "@web-eid/web-eid-library";

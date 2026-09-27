@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
 import { config } from '../config'
 
 export function backendApiUrl(input: RequestInfo | URL): RequestInfo | URL {

@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 

@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
 import { useEffect, useRef } from 'react'
 
 export function useCallOnce(fn: () => void) {

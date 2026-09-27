@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
 import { HttpXsrfTokenExtractor } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 

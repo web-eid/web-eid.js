@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
 import { useContext, useState } from 'react'
 import { useSign } from '../hooks/useSign'
 import { AppContext } from '../context/AppContext'

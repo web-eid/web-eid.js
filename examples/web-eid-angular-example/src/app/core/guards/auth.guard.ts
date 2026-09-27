@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 

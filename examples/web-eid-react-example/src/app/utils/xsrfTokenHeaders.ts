@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
 const XSRF_COOKIE_NAME = 'XSRF-TOKEN'
 const XSRF_HEADER_NAME = 'X-XSRF-TOKEN'
 const XSRF_PROTECTED_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE'])

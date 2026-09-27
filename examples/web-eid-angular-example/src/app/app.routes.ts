@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
 import { Routes } from '@angular/router';
 import { SignComponent } from './pages/sign/sign.component';
 import { WelcomeComponent } from './pages/welcome/welcome.component';

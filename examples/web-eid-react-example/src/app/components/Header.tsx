@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
 import { NavLink } from 'react-router'
 import './Header.css'
 import { ActionType } from '../state/actions'

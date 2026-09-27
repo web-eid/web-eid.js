@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
 const backendApiUrl = import.meta.env.VITE_WEB_EID_BACKEND_API_URL?.trim().replace(/\/$/, '') ?? ''
 
 export const config = {

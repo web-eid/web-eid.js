@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
 import _ from "lodash";
 
 import * as WebEid from "@web-eid/web-eid-library";

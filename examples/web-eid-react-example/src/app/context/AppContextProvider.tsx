@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
 import { useReducer } from 'react'
 import { AppContext } from './AppContext'
 import { initialState, reducer } from '../state/reducer'

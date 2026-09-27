@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
 import { setupWorker } from "msw/browser";
 import { config } from "../app/config";
 import authHandlers from "./handlers/auth.handlers";

@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
 import { useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import { isKnownWebEidError } from '../utils/webEidUtils'
