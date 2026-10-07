@@ -1,0 +1,13 @@
+# SPDX-FileCopyrightText: Estonian Information System Authority
+# SPDX-License-Identifier: MIT
+
+name: Checks
+on:
+  push:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+permissions:
+  contents: read
+jobs:
+  checks:
+    uses: web-eid/.github/.github/workflows/checks.yml@be4c03c185155981cb17d5c5d12dfca3334fd131 # main
