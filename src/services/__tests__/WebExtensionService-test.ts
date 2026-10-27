@@ -4,6 +4,20 @@
 import Action from "../../models/Action";
 import WebExtensionService from "../WebExtensionService";
 
+/**
+ * Dispatch a message as the legitimate extension content script would: from the
+ * page's own window and origin (event.source === window, event.origin === own
+ * origin). jsdom's window.postMessage sets source to null and origin to "", so
+ * we construct the MessageEvent explicitly.
+ */
+function postFromExtension(data: unknown): void {
+  window.dispatchEvent(new MessageEvent("message", {
+    data,
+    source: window,
+    origin: window.location.origin,
+  }));
+}
+
 describe("WebExtensionService", () => {
   let service: WebExtensionService;
 
@@ -20,7 +34,7 @@ describe("WebExtensionService", () => {
     it("should ignore messages with data but no action property", async () => {
       jest.spyOn(console, "warn").mockImplementation();
 
-      window.postMessage({ someOtherProperty: "value" }, "*");
+      postFromExtension({ someOtherProperty: "value" });
       await new Promise((resolve) => setTimeout(resolve));
 
       expect(console.warn).not.toHaveBeenCalled();
@@ -29,7 +43,7 @@ describe("WebExtensionService", () => {
     it("should ignore messages with null data", async () => {
       jest.spyOn(console, "warn").mockImplementation();
 
-      window.postMessage(null, "*");
+      postFromExtension(null);
       await new Promise((resolve) => setTimeout(resolve));
 
       expect(console.warn).not.toHaveBeenCalled();
@@ -38,7 +52,7 @@ describe("WebExtensionService", () => {
     it("should ignore messages with undefined data", async () => {
       jest.spyOn(console, "warn").mockImplementation();
 
-      window.postMessage(undefined, "*");
+      postFromExtension(undefined);
       await new Promise((resolve) => setTimeout(resolve));
 
       expect(console.warn).not.toHaveBeenCalled();
@@ -47,7 +61,7 @@ describe("WebExtensionService", () => {
     it("should ignore messages with action as an object", async () => {
       jest.spyOn(console, "warn").mockImplementation();
 
-      window.postMessage({ action: { id: "123", _t: "456" } }, "*");
+      postFromExtension({ action: { id: "123", _t: "456" } });
       await new Promise((resolve) => setTimeout(resolve));
 
       expect(console.warn).not.toHaveBeenCalled();
@@ -56,7 +70,7 @@ describe("WebExtensionService", () => {
     it("should ignore messages with action as an object with startsWith property", async () => {
       jest.spyOn(console, "warn").mockImplementation();
 
-      window.postMessage({ action: { startsWith: "2022-10-12", endsWith: "2026-10-12" } }, "*");
+      postFromExtension({ action: { startsWith: "2022-10-12", endsWith: "2026-10-12" } });
       await new Promise((resolve) => setTimeout(resolve));
 
       expect(console.warn).not.toHaveBeenCalled();
@@ -65,7 +79,7 @@ describe("WebExtensionService", () => {
     it("should ignore messages with action as a number", async () => {
       jest.spyOn(console, "warn").mockImplementation();
 
-      window.postMessage({ action: 12345 }, "*");
+      postFromExtension({ action: 12345 });
       await new Promise((resolve) => setTimeout(resolve));
 
       expect(console.warn).not.toHaveBeenCalled();
@@ -74,7 +88,7 @@ describe("WebExtensionService", () => {
     it("should ignore messages with action as an array", async () => {
       jest.spyOn(console, "warn").mockImplementation();
 
-      window.postMessage({ action: ["web-eid:test"] }, "*");
+      postFromExtension({ action: ["web-eid:test"] });
       await new Promise((resolve) => setTimeout(resolve));
 
       expect(console.warn).not.toHaveBeenCalled();
@@ -85,10 +99,10 @@ describe("WebExtensionService", () => {
     it("should log a warning from web-eid:warning message", async () => {
       jest.spyOn(console, "warn").mockImplementation();
   
-      window.postMessage({
+      postFromExtension({
         action:   "web-eid:warning",
         warnings: ["example warning"],
-      }, "*");
+      });
   
       await new Promise((resolve) => setTimeout(resolve));
   
@@ -99,15 +113,15 @@ describe("WebExtensionService", () => {
     it("should log multiple different warnings from separate web-eid:warning messages", async () => {
       jest.spyOn(console, "warn").mockImplementation();
   
-      window.postMessage({
+      postFromExtension({
         action:   "web-eid:warning",
         warnings: ["example warning 1"],
-      }, "*");
+      });
   
-      window.postMessage({
+      postFromExtension({
         action:   "web-eid:warning",
         warnings: ["example warning 2"],
-      }, "*");
+      });
   
       await new Promise((resolve) => setTimeout(resolve));
   
@@ -119,14 +133,14 @@ describe("WebExtensionService", () => {
     it("should log multiple different warnings from a single web-eid:warning message", async () => {
       jest.spyOn(console, "warn").mockImplementation();
   
-      window.postMessage({
+      postFromExtension({
         action:   "web-eid:warning",
         warnings: [
           "example warning 3",
           "example warning 4",
           "example warning 5",
         ],
-      }, "*");
+      });
   
       await new Promise((resolve) => setTimeout(resolve));
   
@@ -139,13 +153,13 @@ describe("WebExtensionService", () => {
     it("should not log the same message multiple times from one web-eid:warning message", async () => {
       jest.spyOn(console, "warn").mockImplementation();
   
-      window.postMessage({
+      postFromExtension({
         action:   "web-eid:warning",
         warnings: [
           "example same warning 1",
           "example same warning 1",
         ],
-      }, "*");
+      });
   
       await new Promise((resolve) => setTimeout(resolve));
   
@@ -156,15 +170,15 @@ describe("WebExtensionService", () => {
     it("should not log the same message multiple times from multiple web-eid:warning messages", async () => {
       jest.spyOn(console, "warn").mockImplementation();
   
-      window.postMessage({
+      postFromExtension({
         action:   "web-eid:warning",
         warnings: ["example same warning 2"],
-      }, "*");
+      });
   
-      window.postMessage({
+      postFromExtension({
         action:   "web-eid:warning",
         warnings: ["example same warning 2"],
-      }, "*");
+      });
   
       await new Promise((resolve) => setTimeout(resolve));
   

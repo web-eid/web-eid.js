@@ -7,6 +7,24 @@ import ActionOptions from "../models/ActionOptions";
 
 Object.defineProperty(global.window, "isSecureContext", { get: () => true });
 
+/**
+ * Dispatch a message as the legitimate extension content script would: from the
+ * page's own window and origin, so that receive()'s sender validation accepts
+ * it. jsdom's window.postMessage sets source to null and origin to "".
+ */
+function postFromExtension(data: unknown): void {
+  // Deliver asynchronously (as window.postMessage does) so the response arrives
+  // after status()/authenticate() has awaited extensionLoadDelay and queued the
+  // request.
+  setTimeout(() => {
+    window.dispatchEvent(new MessageEvent("message", {
+      data,
+      source: window,
+      origin: window.location.origin,
+    }));
+  });
+}
+
 describe("status", () => {
   afterEach(() => {
     jest.restoreAllMocks();
@@ -35,16 +53,16 @@ describe("status", () => {
   it("should return library, extension and app versions", async () => {
     const statusPromise = webeid.status();
 
-    window.postMessage({
+    postFromExtension({
       action: "web-eid:status-ack",
-    }, "*");
+    });
 
-    window.postMessage({
+    postFromExtension({
       action:    "web-eid:status-success",
       library:   process.env.npm_package_version,
       extension: process.env.npm_package_version,
       nativeApp: process.env.npm_package_version,
-    }, "*");
+    });
 
     expect(await statusPromise).toMatchObject({
       library:   process.env.npm_package_version,

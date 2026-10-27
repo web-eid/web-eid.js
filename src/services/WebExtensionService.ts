@@ -24,11 +24,20 @@ export default class WebExtensionService {
     window.addEventListener("message", (event) => this.receive(event));
   }
 
-  private receive(event: { data: ExtensionResponse }): void {
-    if (typeof event.data?.action !== "string") return;
-    if (!event.data.action.startsWith("web-eid:")) return;
+  private receive(event: MessageEvent): void {
+    // Only accept messages from the page's own window. The extension content
+    // script is injected into this document and posts responses back into the
+    // same window (event.source === window, event.origin === own origin).
+    // Reject anything else (embedded iframes, framing parents, other windows)
+    // to prevent forged extension responses. See CWE-346 / CWE-940.
+    if (event.source !== window) return;
+    if (event.origin !== window.location.origin) return;
 
-    const message       = event.data;
+    const message = event.data as ExtensionResponse;
+
+    if (typeof message?.action !== "string") return;
+    if (!message.action.startsWith("web-eid:")) return;
+
     const suffix        = ["success", "failure", "ack"].find((s) => message.action.endsWith(s));
     const initialAction = this.getInitialAction(message.action);
     const pending       = this.getPendingMessage(initialAction);
