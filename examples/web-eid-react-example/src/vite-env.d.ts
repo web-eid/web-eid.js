@@ -1,0 +1,3 @@
+// SPDX-FileCopyrightText: Estonian Information System Authority
+// SPDX-License-Identifier: MIT
+/// <reference types="vite/client" />
